@@ -44,7 +44,9 @@ defmodule Rona.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:httpoison, "~> 1.6"},
-      {:csv, "~> 2.3"}
+      {:csv, "~> 2.3"},
+      {:phoenix_live_view, "~> 0.10.0"},
+      {:floki, ">= 0.0.0", only: :test}
     ]
   end
 

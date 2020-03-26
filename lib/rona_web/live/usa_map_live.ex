@@ -1,7 +1,7 @@
 defmodule RonaWeb.USAMapLive do
   use Phoenix.LiveView
 
-  @tick_interval 100
+  @tick_interval 500
 
   def mount(_params, _session, socket) do
     dates = Rona.Cases.list_dates()

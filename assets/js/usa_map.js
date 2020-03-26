@@ -1,4 +1,4 @@
-import * as d3 from "d3"
+// import * as d3 from "d3"
 import * as topojson from "topojson-client"
 
 const colors = [
@@ -72,16 +72,12 @@ const updateMap = (obj) => {
 ${format(obj, data.get(d.id), data.title)}`);
 };
 
-const USAMap = {
+export default {
 	mounted() {
-		console.log("MOUNTED");
 		initMap(this);
 	},
 
 	updated() {
-		console.log("UPDATED");
 		updateMap(this);
 	}
 };
-
-export default USAMap;

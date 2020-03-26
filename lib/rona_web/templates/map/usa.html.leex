@@ -1,1 +1,10 @@
-<h1>USA Map Goes Here</h1>
+<div id="map" phx-update="ignore"></div>
+<div id="hook" phx-hook="USAMap" data-mapdata="<%= @data %>" data-target="map"></div>
+<button phx-click="prev">Prev</button>
+<%= @date %>
+<button phx-click="next">Next</button>
+<%= if @playing do %>
+  <button phx-click="stop">Stop</button>
+<% else %>
+  <button phx-click="play">Play</button>
+<% end %>

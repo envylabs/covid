@@ -45,4 +45,25 @@ defmodule Rona.Cases do
       |> Repo.insert!()
     end
   end
+
+  @doc """
+  Returns the list of dates for which we have case reports.
+  """
+  def list_dates do
+    Report
+    |> select([r], r.date)
+    |> order_by([r], r.date)
+    |> distinct(true)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns all the case reports for a given date.
+  """
+  def for_date(date) do
+    Report
+    |> where([r], r.date == ^date)
+    |> preload(:location)
+    |> Repo.all()
+  end
 end

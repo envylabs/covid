@@ -11,9 +11,10 @@ defmodule Rona.Application do
       # Start the Ecto repository
       Rona.Repo,
       # Start the endpoint when the application starts
-      RonaWeb.Endpoint
+      RonaWeb.Endpoint,
       # Starts a worker by calling: Rona.Worker.start_link(arg)
       # {Rona.Worker, arg},
+      Rona.Data
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -21,7 +21,7 @@ defmodule RonaWeb.Endpoint do
     at: "/",
     from: :rona,
     gzip: false,
-    only: ~w(css fonts images js favicon.ico robots.txt)
+    only: ~w(css fonts images js favicon.ico robots.txt data)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

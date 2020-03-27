@@ -2,35 +2,41 @@
 import * as topojson from "topojson-client"
 
 const colors = [
-	"#e8e8e8", "#b5c0da", "#6c83b5",
-	"#b8d6be", "#90b2b3", "#567994",
-	"#73ae80", "#5a9178", "#2a5a5b"
+	"#52b2c7", "#4e236c"
 ]
 
 const color = (obj, value) => {
 	if (!value) return "#ccc";
 	let [a, b] = value;
-	return colors[obj.y(b) + obj.x(a) * obj.n];
+	if (a == 0) return "#ccc";
+	return obj.x(a);
 };
 
-const labels = ["low", "", "high"];
-
-const format = (obj, value, titles) => {
+const format = (obj, value) => {
 	if (!value) return "N/A";
 	let [a, b] = value;
-	return `${a}% ${titles[0]}${labels[obj.x(a)] && ` (${labels[obj.x(a)]})`}
-${b}% ${titles[1]}${labels[obj.y(b)] && ` (${labels[obj.y(b)]})`}`;
+	return `${a} cases
+${b} deaths`;
 };
 
 const path = d3.geoPath();
 
+const getData = (obj, id) => {
+	const data = obj.data[obj.date];
+	if (data) {
+		return data[id];
+	} else {
+		return [0, 0];
+	}
+}
+
 const initMap = (obj) => {
 	obj.target = document.getElementById(obj.el.dataset.target);
-	const data = Object.assign(new Map(Object.entries(JSON.parse(obj.el.dataset.mapdata))), {title: ["Diabetes", "Obesity"]});
+	obj.data = JSON.parse(obj.el.dataset.mapdata);
+	obj.date = obj.el.dataset.date;
 
-	obj.n = Math.floor(Math.sqrt(colors.length));
-	obj.x = d3.scaleQuantile(Array.from(data.values(), d => d[0]), d3.range(obj.n));
-	obj.y = d3.scaleQuantile(Array.from(data.values(), d => d[1]), d3.range(obj.n));
+	obj.x = d3.scaleLinear([0, obj.el.dataset.maxConfirmed], colors);
+	obj.y = d3.scaleLinear([0, obj.el.dataset.maxDeceased], colors);
 
 	d3.json("/data/us-counties.json").then((us) => {
 		obj.us = us;
@@ -40,15 +46,17 @@ const initMap = (obj) => {
 			.append("svg")
 			.attr("viewBox", [0, 0, 975, 610]);
 
+		const date = obj.target.dataset.date;
+
 		svg.append("g")
 			.selectAll("path")
 			.data(topojson.feature(us, us.objects.counties).features)
 			.join("path")
-			.attr("fill", d => color(obj, data.get(d.id)))
+			.attr("fill", d => color(obj, getData(obj, d.id)))
 			.attr("d", path)
 			.append("title")
 			.text(d => `${d.properties.name}, ${obj.states.get(d.id.slice(0, 2)).name}
-${format(obj, data.get(d.id), data.title)}`);
+${format(obj, getData(obj, d.id))}`);
 
 		svg.append("path")
 			.datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
@@ -60,16 +68,16 @@ ${format(obj, data.get(d.id), data.title)}`);
 };
 
 const updateMap = (obj) => {
-	const data = Object.assign(new Map(Object.entries(JSON.parse(obj.el.dataset.mapdata))), {title: ["Diabetes", "Obesity"]});
+	obj.date = obj.el.dataset.date;
 
 	d3.select(obj.target)
 		.select("svg")
 		.select("g")
 		.selectAll("path")
-		.attr("fill", d => color(obj, data.get(d.id)))
+		.attr("fill", d => color(obj, getData(obj, d.id)))
 		.select("title")
 		.text(d => `${d.properties.name}, ${obj.states.get(d.id.slice(0, 2)).name}
-${format(obj, data.get(d.id), data.title)}`);
+${format(obj, getData(obj, d.id))}`);
 };
 
 export default {

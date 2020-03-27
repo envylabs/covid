@@ -4,7 +4,7 @@ defmodule RonaWeb.USAMapLive do
   @tick_interval 500
 
   def mount(_params, _session, socket) do
-    dates = Rona.Cases.list_dates()
+    dates = Rona.Cases.list_dates(Rona.Cases.CountyReport)
 
     socket =
       socket
@@ -19,14 +19,14 @@ defmodule RonaWeb.USAMapLive do
     index = socket.assigns.date_index - 1
     index = if index < 0, do: length(socket.assigns.dates) - 1, else: index
     socket = assign(socket, :date_index, index)
-    {:noreply, fetch_data(socket)}
+    {:noreply, set_date(socket)}
   end
 
   def handle_event("next", _, socket) do
     index = socket.assigns.date_index + 1
     index = if index >= length(socket.assigns.dates), do: 0, else: index
     socket = assign(socket, :date_index, index)
-    {:noreply, fetch_data(socket)}
+    {:noreply, set_date(socket)}
   end
 
   def handle_event("play", _, socket) do
@@ -51,16 +51,29 @@ defmodule RonaWeb.USAMapLive do
     date = Enum.at(socket.assigns.dates, socket.assigns.date_index)
 
     data =
-      Rona.Cases.for_date(date)
-      |> Enum.reduce(%{}, fn report, map ->
-        Map.put(map, "12#{String.pad_leading(Integer.to_string(report.location.id), 3, "0")}", [
-          report.active,
-          report.deceased
-        ])
+      socket.assigns.dates
+      |> Enum.reduce(%{}, fn d, result ->
+        date_data =
+          Rona.Cases.for_date(Rona.Cases.CountyReport, d)
+          |> Enum.reduce(%{}, fn report, map ->
+            Map.put(map, report.county.fips, [
+              report.confirmed,
+              report.deceased
+            ])
+          end)
+
+        Map.put(result, d, date_data)
       end)
 
     socket
     |> assign(:date, date)
     |> assign(:data, Jason.encode!(data))
+    |> assign(:max_confirmed, Rona.Cases.max_confirmed(Rona.Cases.CountyReport))
+    |> assign(:max_deceased, Rona.Cases.max_deceased(Rona.Cases.CountyReport))
+  end
+
+  defp set_date(socket) do
+    date = Enum.at(socket.assigns.dates, socket.assigns.date_index)
+    socket |> assign(:date, date)
   end
 end

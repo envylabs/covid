@@ -7,6 +7,8 @@ defmodule Rona.Places do
   alias Rona.Repo
 
   alias Rona.Places.Location
+  alias Rona.Places.State
+  alias Rona.Places.County
 
   @doc """
   Returns the list of locations.
@@ -19,6 +21,37 @@ defmodule Rona.Places do
   """
   def list_locations do
     Location
+    |> preload(:reports)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the list of states.
+
+  ## Examples
+
+      iex> list_states()
+      [%State{}, ...]
+
+  """
+  def list_states do
+    State
+    |> preload(:reports)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the list of counties for a state.
+
+  ## Examples
+
+      iex> list_counties(state)
+      [%County{}, ...]
+
+  """
+  def list_counties(state) do
+    County
+    |> where([c], c.state == ^state.name)
     |> preload(:reports)
     |> Repo.all()
   end
@@ -51,6 +84,45 @@ defmodule Rona.Places do
         province_state: province_state,
         latitude: latitude,
         longitude: longitude
+      })
+      |> Repo.insert!()
+    end
+  end
+
+  def find_state(fips, name) do
+    state =
+      State
+      |> where([s], s.fips == ^fips)
+      |> preload(:reports)
+      |> Repo.one()
+
+    if state do
+      state
+    else
+      %State{}
+      |> State.changeset(%{
+        fips: fips,
+        name: name
+      })
+      |> Repo.insert!()
+    end
+  end
+
+  def find_county(fips, state, name) do
+    county =
+      County
+      |> where([c], c.name == ^name and c.state == ^state)
+      |> preload(:reports)
+      |> Repo.one()
+
+    if county do
+      county
+    else
+      %County{}
+      |> County.changeset(%{
+        fips: fips,
+        state: state,
+        name: name
       })
       |> Repo.insert!()
     end

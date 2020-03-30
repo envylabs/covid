@@ -10,7 +10,9 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :rona, RonaWeb.Endpoint,
-  url: [host: "insistent-blind-gypsymoth.gigalixirapp.com", port: 443],
+  http: [port: {:system, "PORT"}],
+  url: [scheme: "https", host: "vast-tundra-76050.herokuapp.com", port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production

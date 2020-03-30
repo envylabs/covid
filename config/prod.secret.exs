@@ -13,9 +13,8 @@ database_url =
 
 config :rona, Rona.Repo,
   url: database_url,
-  database: "",
   ssl: true,
-  pool_size: 2
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
 secret_key_base =
   System.get_env("SECRET_KEY_BASE") ||

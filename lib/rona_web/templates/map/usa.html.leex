@@ -1,5 +1,3 @@
-<div id="map" phx-update="ignore"></div>
-<div id="hook" phx-hook="USAMap" data-mapdata="<%= @data %>" data-target="map" data-date="<%= @date %>" data-label="<%= label_for(@series) %>"></div>
 <div id="controls">
   <form phx-change="update_settings">
     <select name="series">
@@ -9,12 +7,9 @@
       <option value="deceased_delta" <%= if @series == :deceased_delta, do: "selected", else: "" %>>New Deaths</option>
     </select>
   </form>
-  <button phx-click="prev">Prev</button>
-  <%= @date %>
-  <button phx-click="next">Next</button>
-  <%= if @playing do %>
-    <button phx-click="stop">Stop</button>
-  <% else %>
-    <button phx-click="play">Play</button>
-  <% end %>
+  <input id="date-range" type="range" min="0" max="<%= @max_date_index %>" value="<%= @max_date_index %>" phx-hook="DateRange" data-dates="<%= @json_dates %>" />
+  <span id="current-date"><%= List.last(@dates) %></span>
+  <button id="play" phx-hook="Play">&#9654;</button>
 </div>
+<div id="map" phx-update="ignore"></div>
+<div id="hook" phx-hook="USAMap" data-target="map" data-mapdata="<%= @data %>" data-label="<%= label_for(@series) %>"></div>

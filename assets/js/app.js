@@ -13,9 +13,23 @@ import "phoenix_html"
 
 import {Socket} from "phoenix"
 import LiveSocket from "phoenix_live_view"
+
+import DateRange from "./date_range"
+import Play from "./play"
 import USAMap from "./usa_map"
 
-let Hooks = {USAMap: USAMap};
+window.rona = {
+	dates: [],
+	date: null,
+	map: null,
+	slider: null
+};
+
+let Hooks = {
+	DateRange: DateRange,
+	Play: Play,
+	USAMap: USAMap
+};
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks: Hooks});
 liveSocket.connect();

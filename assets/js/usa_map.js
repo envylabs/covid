@@ -12,7 +12,7 @@ const label = (obj, value) => {
 const path = d3.geoPath();
 
 const getData = (obj, id) => {
-  const data = obj.data[obj.date];
+  const data = obj.data[window.rona.date];
   var result = 0;
   if (data) {
     result = data[id] || 0;
@@ -22,7 +22,6 @@ const getData = (obj, id) => {
 
 const prepareMap = (obj) => {
   obj.data = JSON.parse(obj.el.dataset.mapdata);
-  obj.date = obj.el.dataset.date;
   obj.label = obj.el.dataset.label;
 
   obj.maxValue = Object.values(obj.data).map(d => Object.values(d)).flat().reduce((a, b) => Math.max(a, b));
@@ -30,7 +29,7 @@ const prepareMap = (obj) => {
     .domain([0, Math.sqrt(obj.maxValue) / 2]);
 }
 
-const initMap = (obj) => {
+export const initMap = (obj) => {
   obj.target = document.getElementById(obj.el.dataset.target);
   prepareMap(obj);
 
@@ -41,8 +40,6 @@ const initMap = (obj) => {
     const svg = d3.select(obj.target)
       .append("svg")
       .attr("viewBox", [0, 0, 975, 610]);
-
-    const date = obj.target.dataset.date;
 
     svg.append("g")
       .selectAll("path")
@@ -63,7 +60,7 @@ ${label(obj, getData(obj, d.id))}`);
   });
 };
 
-const updateMap = (obj) => {
+export const updateMap = (obj) => {
   prepareMap(obj);
 
   d3.select(obj.target)
@@ -79,6 +76,7 @@ ${label(obj, getData(obj, d.id))}`);
 export default {
   mounted() {
     initMap(this);
+		window.rona.map = this;
   },
 
   updated() {

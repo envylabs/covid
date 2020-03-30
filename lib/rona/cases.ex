@@ -151,6 +151,16 @@ defmodule Rona.Cases do
     |> Repo.all()
   end
 
+  def for_dates(CountyReport, dates) do
+    CountyReport
+    |> where([r], r.date in ^dates)
+    |> join(:left, [r], c in assoc(r, :county))
+    |> where([r, c], c.fips != "")
+    |> order_by(:date)
+    |> preload(:county)
+    |> Repo.all()
+  end
+
   def max_confirmed(CountyReport) do
     CountyReport
     |> select([r], max(r.confirmed))

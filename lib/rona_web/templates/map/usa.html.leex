@@ -6,10 +6,14 @@
       <option value="deceased" <%= if @series == :deceased, do: "selected", else: "" %>>Total Deaths</option>
       <option value="deceased_delta" <%= if @series == :deceased_delta, do: "selected", else: "" %>>New Deaths</option>
     </select>
+    <label>
+      <input name="population_scale" type="checkbox" <%= if @population_scale, do: "checked", else: "" %> />
+      Scale by Population
+    </label>
   </form>
   <input id="date-range" type="range" min="0" max="<%= @max_date_index %>" value="<%= @max_date_index %>" phx-hook="DateRange" data-dates="<%= @json_dates %>" />
   <span id="current-date"><%= List.last(@dates) %></span>
   <button id="play" phx-hook="Play">&#9654;</button>
 </div>
 <div id="map" phx-update="ignore"></div>
-<div id="hook" phx-hook="USAMap" data-target="map" data-mapdata="<%= @data %>" data-label="<%= label_for(@series) %>"></div>
+<div id="hook" phx-hook="USAMap" data-target="map" data-mapdata="<%= @data %>" data-label="<%= label_for(@series) %>" data-percent="<%= if @population_scale, do: "true", else: "" %>"></div>

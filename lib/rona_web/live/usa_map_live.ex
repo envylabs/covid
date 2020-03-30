@@ -11,16 +11,20 @@ defmodule RonaWeb.USAMapLive do
     socket =
       socket
       |> assign(:series, :confirmed)
+      |> assign(:population_scale, false)
       |> assign(:dates, dates)
       |> assign(:json_dates, Jason.encode!(dates))
       |> assign(:max_date_index, length(dates) - 1)
-      |> assign(:playing, false)
 
     {:ok, fetch_data(socket)}
   end
 
-  def handle_event("update_settings", %{"series" => series}, socket) do
-    socket = assign(socket, :series, String.to_atom(series))
+  def handle_event("update_settings", params, socket) do
+    socket =
+      socket
+      |> assign(:series, String.to_atom(params["series"]))
+      |> assign(:population_scale, params["population_scale"] || false)
+
     {:noreply, fetch_data(socket)}
   end
 
@@ -30,15 +34,24 @@ defmodule RonaWeb.USAMapLive do
 
   defp fetch_data(socket) do
     data =
-      socket.assigns.dates
-      |> Enum.reduce(%{}, fn d, result ->
-        date_data =
-          Rona.Cases.for_date(Rona.Cases.CountyReport, d)
-          |> Enum.reduce(%{}, fn report, map ->
-            Map.put(map, report.county.fips, Map.get(report, socket.assigns.series))
-          end)
+      Rona.Cases.for_dates(Rona.Cases.CountyReport, socket.assigns.dates)
+      |> Enum.reduce(%{}, fn report, result ->
+        date_data = Map.get(result, report.date, %{})
+        value = Map.get(report, socket.assigns.series)
 
-        Map.put(result, d, date_data)
+        value =
+          if socket.assigns.population_scale do
+            if report.county.population > 0 do
+              value / report.county.population * 100
+            else
+              0
+            end
+          else
+            value
+          end
+
+        date_data = Map.put(date_data, report.county.fips, value)
+        Map.put(result, report.date, date_data)
       end)
 
     socket

@@ -6,6 +6,7 @@ defmodule Rona.Places.County do
     field :fips, :string
     field :state, :string
     field :name, :string
+    field :population, :integer
 
     has_many :reports, Rona.Cases.CountyReport
 
@@ -15,7 +16,7 @@ defmodule Rona.Places.County do
   @doc false
   def changeset(county, attrs) do
     county
-    |> cast(attrs, [:fips, :state, :name])
+    |> cast(attrs, [:fips, :state, :name, :population])
     |> validate_required([:state, :name])
   end
 end

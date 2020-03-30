@@ -6,7 +6,11 @@ const color = (obj, value) => {
 };
 
 const label = (obj, value) => {
-  return `${value} ${obj.label}`;
+  if (obj.percent) {
+    return `${value.toFixed(2)}% of population`;
+  } else {
+    return `${value} ${obj.label}`;
+  }
 };
 
 const path = d3.geoPath();
@@ -23,6 +27,7 @@ const getData = (obj, id) => {
 const prepareMap = (obj) => {
   obj.data = JSON.parse(obj.el.dataset.mapdata);
   obj.label = obj.el.dataset.label;
+  obj.percent = obj.el.dataset.percent;
 
   obj.maxValue = Object.values(obj.data).map(d => Object.values(d)).flat().reduce((a, b) => Math.max(a, b));
   obj.x = d3.scaleSequential(d3.interpolateBuPu)
@@ -76,7 +81,7 @@ ${label(obj, getData(obj, d.id))}`);
 export default {
   mounted() {
     initMap(this);
-		window.rona.map = this;
+    window.rona.map = this;
   },
 
   updated() {

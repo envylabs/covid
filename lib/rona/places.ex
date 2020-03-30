@@ -92,9 +92,13 @@ defmodule Rona.Places do
   def find_state(fips, name) do
     state =
       State
-      |> where([s], s.name == ^name)
+      |> where([s], s.fips == ^fips)
       |> preload(:reports)
-      |> Repo.one()
+      |> Repo.one() ||
+        State
+        |> where([s], s.name == ^name)
+        |> preload(:reports)
+        |> Repo.one()
 
     if state do
       state
@@ -111,9 +115,13 @@ defmodule Rona.Places do
   def find_county(fips, state, name) do
     county =
       County
-      |> where([c], c.name == ^name and c.state == ^state)
+      |> where([c], c.fips == ^fips)
       |> preload(:reports)
-      |> Repo.one()
+      |> Repo.one() ||
+        County
+        |> where([c], c.name == ^name and c.state == ^state)
+        |> preload(:reports)
+        |> Repo.one()
 
     if county do
       county
@@ -126,5 +134,17 @@ defmodule Rona.Places do
       })
       |> Repo.insert!()
     end
+  end
+
+  def update_state(%State{} = state, attrs) do
+    state
+    |> State.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update_county(%County{} = county, attrs) do
+    county
+    |> County.changeset(attrs)
+    |> Repo.update()
   end
 end

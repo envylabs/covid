@@ -5,6 +5,7 @@ defmodule Rona.Places.State do
   schema "states" do
     field :fips, :string
     field :name, :string
+    field :population, :integer
 
     has_many :reports, Rona.Cases.StateReport
 
@@ -14,7 +15,7 @@ defmodule Rona.Places.State do
   @doc false
   def changeset(state, attrs) do
     state
-    |> cast(attrs, [:fips, :name])
+    |> cast(attrs, [:fips, :name, :population])
     |> validate_required([:fips, :name])
   end
 end

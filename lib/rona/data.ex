@@ -63,6 +63,38 @@ defmodule Rona.Data do
     end)
   end
 
+  def load_usa(:census) do
+    parse_csv(
+      "https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/totals/co-est2019-alldata.csv",
+      :latin1
+    )
+    |> Enum.each(fn row ->
+      state_fips = row["STATE"]
+      county_fips = row["COUNTY"]
+      state_name = row["STNAME"]
+      county_name = row["CTYNAME"]
+      population = String.to_integer(row["POPESTIMATE2019"])
+
+      county_name =
+        if String.ends_with?(county_name, "County"),
+          do:
+            String.split(county_name, " ")
+            |> Enum.reverse()
+            |> tl()
+            |> Enum.reverse()
+            |> Enum.join(" "),
+          else: county_name
+
+      if county_fips == "000" do
+        Rona.Places.find_state(state_fips, state_name)
+        |> Rona.Places.update_state(%{population: population})
+      else
+        Rona.Places.find_county("#{state_fips}#{county_fips}", state_name, county_name)
+        |> Rona.Places.update_county(%{population: population})
+      end
+    end)
+  end
+
   def load_usa(:ny_times) do
     parse_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv")
     |> Enum.each(fn row ->
@@ -164,13 +196,13 @@ defmodule Rona.Data do
     Enum.find(list, &(&1.county_id == id))
   end
 
-  defp parse_csv(url) do
+  defp parse_csv(url, encoding \\ :utf8) do
     response = HTTPoison.get!(url)
 
     file = System.tmp_dir!() |> Path.join("covid-19.csv")
     File.write!(file, response.body)
 
-    File.stream!(file)
+    File.stream!(file, encoding: encoding)
     |> CSV.decode!(headers: true)
   end
 

@@ -96,6 +96,24 @@ defmodule Rona.Cases do
     end
   end
 
+  def update_report(%Report{} = report, attrs) do
+    report
+    |> Report.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update_report(%StateReport{} = report, attrs) do
+    report
+    |> StateReport.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update_report(%CountyReport{} = report, attrs) do
+    report
+    |> CountyReport.changeset(attrs)
+    |> Repo.update()
+  end
+
   @doc """
   Returns the list of dates for which we have case reports.
   """

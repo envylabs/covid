@@ -129,6 +129,41 @@ defmodule Rona.Data do
     end)
   end
 
+  def update_deltas(report_type) do
+    Rona.Cases.list_dates(report_type)
+    |> Enum.reduce([], fn date, prev_reports ->
+      reports = Rona.Cases.for_date(report_type, date)
+
+      Enum.each(reports, fn report ->
+        prev_report = find_matching_report(prev_reports, report)
+
+        {confirmed, deceased} =
+          if prev_report,
+            do: {prev_report.confirmed, prev_report.deceased},
+            else: {0, 0}
+
+        Rona.Cases.update_report(report, %{
+          confirmed_delta: report.confirmed - confirmed,
+          deceased_delta: report.deceased - deceased
+        })
+      end)
+
+      reports
+    end)
+  end
+
+  defp find_matching_report(list, %Rona.Cases.Report{location_id: id}) do
+    Enum.find(list, &(&1.location_id == id))
+  end
+
+  defp find_matching_report(list, %Rona.Cases.StateReport{state_id: id}) do
+    Enum.find(list, &(&1.state_id == id))
+  end
+
+  defp find_matching_report(list, %Rona.Cases.CountyReport{county_id: id}) do
+    Enum.find(list, &(&1.county_id == id))
+  end
+
   defp parse_csv(url) do
     response = HTTPoison.get!(url)
 

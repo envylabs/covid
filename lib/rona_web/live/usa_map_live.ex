@@ -1,15 +1,21 @@
 defmodule RonaWeb.USAMapLive do
   use Phoenix.LiveView
 
-  @tick_interval 500
+  @tick_interval 200
 
   def mount(_params, _session, socket) do
-    dates = Rona.Cases.list_dates(Rona.Cases.CountyReport)
+    end_of_feb = Date.from_iso8601!("2020-02-29")
+
+    dates =
+      Rona.Cases.list_dates(Rona.Cases.CountyReport)
+      |> Enum.filter(&(Date.compare(&1, end_of_feb) == :gt))
 
     socket =
       socket
+      |> assign(:series, :confirmed)
       |> assign(:dates, dates)
       |> assign(:date_index, length(dates) - 1)
+      |> assign(:max_date_index, length(dates) - 1)
       |> assign(:playing, false)
 
     {:ok, fetch_data(socket)}
@@ -38,6 +44,11 @@ defmodule RonaWeb.USAMapLive do
     {:noreply, assign(socket, :playing, false)}
   end
 
+  def handle_event("update_settings", %{"series" => series}, socket) do
+    socket = assign(socket, :series, String.to_atom(series))
+    {:noreply, fetch_data(socket)}
+  end
+
   def handle_info(:tick, socket) do
     if socket.assigns.playing, do: Process.send_after(self(), :tick, @tick_interval)
     handle_event("next", nil, socket)
@@ -56,10 +67,7 @@ defmodule RonaWeb.USAMapLive do
         date_data =
           Rona.Cases.for_date(Rona.Cases.CountyReport, d)
           |> Enum.reduce(%{}, fn report, map ->
-            Map.put(map, report.county.fips, [
-              report.confirmed,
-              report.deceased
-            ])
+            Map.put(map, report.county.fips, Map.get(report, socket.assigns.series))
           end)
 
         Map.put(result, d, date_data)
@@ -68,8 +76,6 @@ defmodule RonaWeb.USAMapLive do
     socket
     |> assign(:date, date)
     |> assign(:data, Jason.encode!(data))
-    |> assign(:max_confirmed, Rona.Cases.max_confirmed(Rona.Cases.CountyReport))
-    |> assign(:max_deceased, Rona.Cases.max_deceased(Rona.Cases.CountyReport))
   end
 
   defp set_date(socket) do

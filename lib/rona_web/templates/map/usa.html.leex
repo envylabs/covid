@@ -1,6 +1,14 @@
 <div id="map" phx-update="ignore"></div>
-<div id="hook" phx-hook="USAMap" data-mapdata="<%= @data %>" data-target="map" data-date="<%= @date %>" data-max-confirmed="<%= @max_confirmed %>" data-max-deceased="<%= @max_deceased %>"></div>
+<div id="hook" phx-hook="USAMap" data-mapdata="<%= @data %>" data-target="map" data-date="<%= @date %>" data-label="<%= label_for(@series) %>"></div>
 <div id="controls">
+  <form phx-change="update_settings">
+    <select name="series">
+      <option value="confirmed" <%= if @series == :confirmed, do: "selected", else: "" %>>Total Cases</option>
+      <option value="confirmed_delta" <%= if @series == :confirmed_delta, do: "selected", else: "" %>>New Cases</option>
+      <option value="deceased" <%= if @series == :deceased, do: "selected", else: "" %>>Total Deaths</option>
+      <option value="deceased_delta" <%= if @series == :deceased_delta, do: "selected", else: "" %>>New Deaths</option>
+    </select>
+  </form>
   <button phx-click="prev">Prev</button>
   <%= @date %>
   <button phx-click="next">Next</button>

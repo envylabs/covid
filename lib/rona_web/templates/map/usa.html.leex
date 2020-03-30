@@ -1,10 +1,12 @@
 <div id="map" phx-update="ignore"></div>
 <div id="hook" phx-hook="USAMap" data-mapdata="<%= @data %>" data-target="map" data-date="<%= @date %>" data-max-confirmed="<%= @max_confirmed %>" data-max-deceased="<%= @max_deceased %>"></div>
-<button phx-click="prev">Prev</button>
-<%= @date %>
-<button phx-click="next">Next</button>
-<%= if @playing do %>
-  <button phx-click="stop">Stop</button>
-<% else %>
-  <button phx-click="play">Play</button>
-<% end %>
+<div id="controls">
+  <button phx-click="prev">Prev</button>
+  <%= @date %>
+  <button phx-click="next">Next</button>
+  <%= if @playing do %>
+    <button phx-click="stop">Stop</button>
+  <% else %>
+    <button phx-click="play">Play</button>
+  <% end %>
+</div>

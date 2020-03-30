@@ -7,7 +7,7 @@ defmodule Rona.Data do
   end
 
   def init(state) do
-    schedule_work(:refresh_us_data, 5_000)
+    # schedule_work(:refresh_us_data, 5_000)
     # schedule_work(:refresh_global_data, 30_000)
     {:ok, state}
   end
@@ -24,7 +24,7 @@ defmodule Rona.Data do
 
   def handle_info(:refresh_us_data, state) do
     Logger.info("Updating US data...")
-    load_usa()
+    load_usa(:ny_times)
     Logger.info("US data updated.")
 
     # 1 hour
@@ -63,7 +63,7 @@ defmodule Rona.Data do
     end)
   end
 
-  def load_usa do
+  def load_usa(:ny_times) do
     parse_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv")
     |> Enum.each(fn row ->
       fips = row["fips"]
@@ -72,8 +72,10 @@ defmodule Rona.Data do
       cases = String.to_integer(row["cases"])
       deaths = String.to_integer(row["deaths"])
 
-      Rona.Places.find_state(fips, state)
-      |> Rona.Cases.file_report(date, cases, deaths)
+      if fips && String.length(fips) > 0 && (cases > 0 || deaths > 0) do
+        Rona.Places.find_state(fips, state)
+        |> Rona.Cases.file_report(date, cases, deaths)
+      end
     end)
 
     parse_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv")
@@ -85,7 +87,44 @@ defmodule Rona.Data do
       cases = String.to_integer(row["cases"])
       deaths = String.to_integer(row["deaths"])
 
-      Rona.Places.find_county(fips, state, county)
+      if fips && String.length(fips) > 0 && (cases > 0 || deaths > 0) do
+        Rona.Places.find_county(fips, state, county)
+        |> Rona.Cases.file_report(date, cases, deaths)
+      end
+    end)
+  end
+
+  def load_usa(:johns_hopkins, date \\ Date.utc_today()) do
+    url =
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports"
+
+    [year, month, day] = date |> Date.to_string() |> String.split("-")
+    file = "#{month}-#{day}-#{year}.csv"
+
+    parse_csv("#{url}/#{file}")
+    |> Enum.reduce(%{}, fn row, states ->
+      fips = if row["FIPS"], do: row["FIPS"], else: row["\uFEFFFIPS"]
+      county = row["Admin2"]
+      state = row["Province_State"]
+      country = row["Country_Region"]
+      cases = String.to_integer(row["Confirmed"])
+      deaths = String.to_integer(row["Deaths"])
+
+      if country == "US" do
+        if fips && String.length(fips) > 0 && county && String.length(county) > 0 &&
+             (cases > 0 || deaths > 0) do
+          Rona.Places.find_county(fips, state, county)
+          |> Rona.Cases.file_report(date, cases, deaths)
+        end
+
+        {total_cases, total_deaths} = Map.get(states, state, {0, 0})
+        Map.put(states, state, {total_cases + cases, total_deaths + deaths})
+      else
+        states
+      end
+    end)
+    |> Enum.each(fn {state, {cases, deaths}} ->
+      Rona.Places.find_state("?", state)
       |> Rona.Cases.file_report(date, cases, deaths)
     end)
   end

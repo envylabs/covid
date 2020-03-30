@@ -92,7 +92,7 @@ defmodule Rona.Places do
   def find_state(fips, name) do
     state =
       State
-      |> where([s], s.fips == ^fips)
+      |> where([s], s.name == ^name)
       |> preload(:reports)
       |> Repo.one()
 

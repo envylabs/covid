@@ -7,7 +7,7 @@ const color = (obj, value) => {
 
 const label = (obj, value) => {
   if (obj.percent) {
-    return `${value.toFixed(2)}% of population`;
+    return `${value} ${obj.label} per 100,000`;
   } else {
     return `${value} ${obj.label}`;
   }

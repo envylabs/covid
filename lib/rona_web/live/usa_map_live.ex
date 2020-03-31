@@ -42,7 +42,7 @@ defmodule RonaWeb.USAMapLive do
         value =
           if socket.assigns.population_scale do
             if report.county.population > 0 do
-              value / report.county.population * 100
+              round(value / report.county.population * 100_000)
             else
               0
             end

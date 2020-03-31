@@ -89,7 +89,9 @@ defmodule RonaWeb.USAMapLive do
       |> Enum.reduce(%{}, fn report, result ->
         date_data = %{
           confirmed: scale_value(report.confirmed, socket, county.population),
-          deceased: scale_value(report.deceased, socket, county.population)
+          confirmed_delta: scale_value(report.confirmed_delta, socket, county.population),
+          deceased: scale_value(report.deceased, socket, county.population),
+          deceased_delta: scale_value(report.deceased_delta, socket, county.population)
         }
 
         Map.put(result, report.date, date_data)

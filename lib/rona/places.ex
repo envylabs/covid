@@ -36,6 +36,7 @@ defmodule Rona.Places do
   """
   def list_states do
     State
+    |> order_by(:name)
     |> preload(:reports)
     |> Repo.all()
   end
@@ -52,6 +53,7 @@ defmodule Rona.Places do
   def list_counties(state) do
     County
     |> where([c], c.state == ^state.name)
+    |> order_by(:name)
     |> preload(:reports)
     |> Repo.all()
   end

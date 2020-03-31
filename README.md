@@ -9,12 +9,17 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Loading initial data
 
-## Learn more
+When starting with a clean database, run `iex -S mix` and then enter the following
+to load the most recent data. Each of these steps will take a while to run and will
+produce a lot of output in your iex console.
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+```
+Rona.Data.load_usa(:ny_times)
+Date.range(Date.from_iso8601!("2020-03-22"), Date.utc_today()) |> Enum.each(& Rona.Data.load_usa(:johns_hopkins, &1))
+Rona.Data.load_usa(:census)
+Rona.Data.update_deltas(Rona.Cases.StateReport)
+Rona.Data.update_deltas(Rona.Cases.CountyReport)
+```
+

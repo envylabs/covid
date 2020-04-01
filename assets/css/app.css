@@ -8,22 +8,100 @@
 ************************************* */
 
 html {
+  color: #333;
   font-family: 'IBM Plex Serif', serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6rem;
+  text-rendering: optimizeLegibility;
+}
+@media (min-width: 40em) {
+  html {
+    font-size: 18px;
+  }
+}
+@media (min-width: 80em) and (min-height: 50em) {
+  html {
+    font-size: 20px;
+  }
 }
 
-/* ----- Inbox ----- */
+/* ----- Headings ----- */
 
-#map {
+h1 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2em;
+  font-weight: bold;
+  line-height: 2.4rem;
+  margin: 0 0 0.4rem;
+}
+
+/* ----- Markup ----- */
+
+p {
+  margin: 1.6rem 0;
+}
+
+time {
+  display: block;
+  font-size: 0.7579em;
+  line-height: 1.2rem;
+}
+
+/* ----- Media ----- */
+
+svg {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+}
+
+/* *************************************
+  Form
+************************************* */
+
+/* ----- Subcomponents ----- */
+
+.form-range {
+  width: 50%;
+}
+
+/* *************************************
+  Layout
+************************************* */
+
+.layout {
+  margin: 0 auto;
+  max-width: 35rem;
+  padding: 1.2rem;
   width: 100%
 }
-
-#controls {
-  position: absolute;
-  top: 10px;
-  width: 100%;
-  text-align: center;
+@media (min-width: 50em) {
+  .layout {
+    padding: 2rem;
+  }
+}
+@media (min-width: 60em) {
+  .layout {
+    padding: 3.2rem;
+  }
 }
 
-#date-range {
-  width: 50%;
+/* ----- Subcomponents ----- */
+
+.layout-breakout {
+  margin: 2rem 0;
+}
+@media (min-width: 50em) {
+  .layout-breakout {
+    margin-left: -4rem;
+    margin-right: -4rem;
+  }
+}
+@media (min-width: 60em) {
+  .layout-breakout {
+    margin-left: -15vw;
+    margin-right: -15vw;
+  }
 }

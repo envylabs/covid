@@ -32,17 +32,17 @@
   <div id="hook" phx-hook="USAMap" data-target="map" data-mapdata="<%= @map_data %>" data-label="<%= label_for(@series) %>" data-percent="<%= if @population_scale, do: "true", else: "" %>"></div>
 </div>
 
-<form phx-change="select_location">
-  <select name="state">
-    <%= for state <- @states do %>
-      <option value="<%= state.id %>" <%= if @selected_state == state.id, do: "selected", else: "" %>><%= state.name %></option>
-    <% end %>
-  </select>
-  <select name="county">
-    <%= for county <- @counties do %>
-      <option value="<%= county.id %>" <%= if @selected_county == county.id, do: "selected", else: "" %>><%= county.name %></option>
-    <% end %>
-  </select>
-</form>
+<%# <form phx-change="select_location"> %>
+<%#   <select name="state"> %>
+<%#     <%= for state <- @states do %1> %>
+<%#       <option value="<%= state.id %1>" <%= if @selected_state == state.id, do: "selected", else: "" %1>><%= state.name %1></option> %>
+<%#     <% end %1> %>
+<%#   </select> %>
+<%#   <select name="county"> %>
+<%#     <%= for county <- @counties do %1> %>
+<%#       <option value="<%= county.id %1>" <%= if @selected_county == county.id, do: "selected", else: "" %1>><%= county.name %1></option> %>
+<%#     <% end %1> %>
+<%#   </select> %>
+<%# </form> %>
 
-<%= @location_data %>
+<%# <%= @location_data %1> %>

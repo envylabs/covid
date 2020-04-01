@@ -13,9 +13,10 @@
         <option value="deceased_delta" <%= if @series == :deceased_delta, do: "selected", else: "" %>>New Deaths</option>
       </select>
     </div>
-    <label>
+
+    <label class="form-checkbox">
       <input name="population_scale" type="checkbox" <%= if @population_scale, do: "checked", else: "" %> />
-      Scale by Population
+      <span>Scale by Population</span>
     </label>
   </form>
 

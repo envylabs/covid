@@ -126,6 +126,15 @@ defmodule Rona.Cases do
   end
 
   @doc """
+  Returns the most recent update timestamp for the given report type.
+  """
+  def latest_update(type) do
+    type
+    |> select([r], max(r.updated_at))
+    |> Repo.one()
+  end
+
+  @doc """
   Returns all the case reports for a given date.
   """
   def for_date(Report, date) do

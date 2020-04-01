@@ -46,7 +46,8 @@ defmodule Rona.MixProject do
       {:httpoison, "~> 1.6"},
       {:csv, "~> 2.3"},
       {:phoenix_live_view, "~> 0.10.0"},
-      {:floki, ">= 0.0.0", only: :test}
+      {:floki, ">= 0.0.0", only: :test},
+      {:timex, "~> 3.5"}
     ]
   end
 

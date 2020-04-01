@@ -79,6 +79,11 @@ defmodule RonaWeb.USAMapLive do
 
     socket
     |> assign(:map_data, Jason.encode!(data))
+    |> assign(
+      :last_update,
+      Rona.Cases.latest_update(Rona.Cases.CountyReport)
+      |> Timex.Timezone.convert(Timex.Timezone.local())
+    )
   end
 
   defp fetch_location_data(socket) do

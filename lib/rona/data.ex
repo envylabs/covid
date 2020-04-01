@@ -32,6 +32,13 @@ defmodule Rona.Data do
     {:noreply, state}
   end
 
+  def update_day(date_str) do
+    date = Date.from_iso8601!(date_str)
+    load_usa(:johns_hopkins, date)
+    update_deltas(Rona.Cases.StateReport)
+    update_deltas(Rona.Cases.CountyReport)
+  end
+
   def load_global do
     parse_csv(
       "https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv"

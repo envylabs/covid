@@ -1,6 +1,6 @@
 /* This file is for your main application css. */
 
-/* @import "./phoenix.css"; */
+@import "./normalize.css";
 /* @import "../../deps/phoenix_live_view/assets/css/live_view.css"; */
 
 /* *************************************
@@ -8,12 +8,9 @@
 ************************************* */
 
 html {
-  color: #333;
-  font-family: 'IBM Plex Serif', serif;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6rem;
   text-rendering: optimizeLegibility;
 }
 @media (min-width: 40em) {
@@ -25,6 +22,11 @@ html {
   html {
     font-size: 20px;
   }
+}
+
+body {
+  color: #333;
+  font: normal 100%/1.6rem 'IBM Plex Serif', serif;
 }
 
 /* ----- Headings ----- */
@@ -61,10 +63,69 @@ svg {
   Form
 ************************************* */
 
+.form {
+  margin-bottom: -2rem;
+}
+
 /* ----- Subcomponents ----- */
 
+.form-button {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: purple;
+  border: 0;
+  box-sizing: border-box;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1.6rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.form-date {
+  white-space: nowrap;
+}
+
 .form-range {
-  width: 50%;
+  width: 100%;
+}
+
+.form-select {
+  display: inline-block;
+  position: relative;
+}
+.form-select::after {
+  border-bottom: 1px solid purple;
+  border-right: 1px solid purple;
+  content: '';
+  height: 0.4rem;
+  pointer-events: none;
+  position: absolute;
+  right: 1rem;
+  top: 0.85rem;
+  transform: rotate(45deg);
+  width: 0.4rem;
+}
+.form-select option {
+  background: white;
+  color: #333;
+}
+.form-select select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: 1px solid #bbb;
+  border-radius: 0;
+  box-sizing: border-box;
+  color: #333;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1.6rem;
+  padding: calc(0.4rem - 1px) 2rem calc(0.4rem - 1px) 0.8rem;
 }
 
 /* *************************************
@@ -104,4 +165,16 @@ svg {
     margin-left: -15vw;
     margin-right: -15vw;
   }
+}
+
+.layout-timeline {
+  align-items: center;
+  background: #eee;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem;
+  margin: 0.8rem -0.4rem;
+}
+.layout-timeline > * + * {
+  margin-left: 1.2rem;
 }

@@ -1,24 +1,29 @@
 <h1>Interactive: U.S. State and County Coronavirus Stats Over Time</h1>
-<time>Last Updated: March 31, 2020 at 5:00pm EST</time>
+<time>Last Updated: March 31, 2020 at 5:00 PM ET</time>
 
 <p>Pairing daily data from <a href="https://github.com/nytimes/covid-19-data">The New York Times</a> and <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>, the following visualizations track COVID-19 cases by U.S. state and county. Each metric can be optionally scaled to population, limited to new instances, and animated over&nbsp;time.</p>
 
-<div id="controls">
+<div class="form" id="controls">
   <form phx-change="update_settings">
-    <select name="series">
-      <option value="confirmed" <%= if @series == :confirmed, do: "selected", else: "" %>>Total Cases</option>
-      <option value="confirmed_delta" <%= if @series == :confirmed_delta, do: "selected", else: "" %>>New Cases</option>
-      <option value="deceased" <%= if @series == :deceased, do: "selected", else: "" %>>Total Deaths</option>
-      <option value="deceased_delta" <%= if @series == :deceased_delta, do: "selected", else: "" %>>New Deaths</option>
-    </select>
+    <div class="form-select">
+      <select name="series">
+        <option value="confirmed" <%= if @series == :confirmed, do: "selected", else: "" %>>Total Cases</option>
+        <option value="confirmed_delta" <%= if @series == :confirmed_delta, do: "selected", else: "" %>>New Cases</option>
+        <option value="deceased" <%= if @series == :deceased, do: "selected", else: "" %>>Total Deaths</option>
+        <option value="deceased_delta" <%= if @series == :deceased_delta, do: "selected", else: "" %>>New Deaths</option>
+      </select>
+    </div>
     <label>
       <input name="population_scale" type="checkbox" <%= if @population_scale, do: "checked", else: "" %> />
       Scale by Population
     </label>
   </form>
-  <input class="form-range" id="date-range" type="range" min="0" max="<%= @max_date_index %>" value="<%= @max_date_index %>" phx-hook="DateRange" data-dates="<%= @json_dates %>" />
-  <span id="current-date"><%= List.last(@dates) %></span>
-  <button id="play" phx-hook="Play">&#9654;</button>
+
+  <div class="layout-timeline">
+    <input class="form-range" id="date-range" type="range" min="0" max="<%= @max_date_index %>" value="<%= @max_date_index %>" phx-hook="DateRange" data-dates="<%= @json_dates %>" />
+    <span class="form-date" id="current-date"><%= List.last(@dates) %></span>
+    <button class="form-button" id="play" phx-hook="Play">Play</button>
+  </div>
 </div>
 
 <div class="layout-breakout">

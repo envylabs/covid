@@ -7,7 +7,7 @@ export default {
     this.el.addEventListener("click", e => {
       this.playing = !this.playing;
       if (this.playing) {
-        this.el.textContent = "Stop"
+        this.el.textContent = "Stop";
         this.interval = window.setInterval(() => {
           updateSlider(window.rona.slider, window.rona.slider.el.valueAsNumber + 1);
         }, 100);
@@ -16,8 +16,16 @@ export default {
           window.clearInterval(this.interval);
           this.interval = null;
         }
-        this.el.textContent = "Play"
+        this.el.textContent = "Play";
       }
     });
+  },
+
+  updated() {
+    if (this.playing) {
+      this.el.textContent = "Stop";
+    } else {
+      this.el.textContent = "Play";
+    }
   }
 }

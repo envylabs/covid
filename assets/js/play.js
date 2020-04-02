@@ -10,7 +10,7 @@ export default {
         this.el.textContent = "Stop";
         this.interval = window.setInterval(() => {
           updateSlider(window.rona.slider, window.rona.slider.el.valueAsNumber + 1);
-        }, 100);
+        }, 200);
       } else {
         if (this.interval) {
           window.clearInterval(this.interval);

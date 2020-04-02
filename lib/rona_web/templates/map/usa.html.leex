@@ -1,8 +1,3 @@
-<h1>Interactive: U.S. State and County Coronavirus Stats Over Time</h1>
-<time>Last Updated: <%= Timex.format!(@last_update, "{Mfull} {D}, {YYYY} at {h12}:{m} {AM} {Zabbr}") %></time>
-
-<p>Pairing daily data from <a href="https://github.com/nytimes/covid-19-data">The New York Times</a> and <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>, the following visualizations track COVID-19 cases by U.S. state and county. Each metric can be optionally scaled to population, limited to new instances, and animated over&nbsp;time.</p>
-
 <div class="form" id="controls">
   <form phx-change="update_settings">
     <div class="form-select">
@@ -29,21 +24,6 @@
 
 <div class="layout-breakout">
   <div id="map" phx-update="ignore"></div>
-  <div id="hook" phx-hook="USAMap" data-target="map" data-mapdata="<%= @map_data %>" data-label="<%= label_for(@series) %>" data-percent="<%= if @population_scale, do: "true", else: "" %>"></div>
+  <div id="hook" phx-hook="USAMap" data-target="map" data-mapdata="<%= @map_data %>" data-label="<%= label_for(@series) %>" data-percent="<%= if @population_scale, do: "true", else: "" %>" data-zoom="<%= @zoom %>"></div>
   <p class="credit">Map adapted from <a href="https://observablehq.com/@d3/bivariate-choropleth">Bivariate Choropleth</a> by <a href="https://observablehq.com/@mbostock">Mike Bostock</a>.</p>
 </div>
-
-<%# <form phx-change="select_location"> %>
-<%#   <select name="state"> %>
-<%#     <%= for state <- @states do %1> %>
-<%#       <option value="<%= state.id %1>" <%= if @selected_state == state.id, do: "selected", else: "" %1>><%= state.name %1></option> %>
-<%#     <% end %1> %>
-<%#   </select> %>
-<%#   <select name="county"> %>
-<%#     <%= for county <- @counties do %1> %>
-<%#       <option value="<%= county.id %1>" <%= if @selected_county == county.id, do: "selected", else: "" %1>><%= county.name %1></option> %>
-<%#     <% end %1> %>
-<%#   </select> %>
-<%# </form> %>
-
-<%# <%= @location_data %1> %>

@@ -4,10 +4,9 @@ defmodule RonaWeb.Router do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
-    plug :fetch_live_flash
+    plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :put_root_layout, {RonaWeb.LayoutView, :live}
   end
 
   pipeline :api do
@@ -17,11 +16,7 @@ defmodule RonaWeb.Router do
   scope "/", RonaWeb do
     pipe_through :browser
 
-    live "/", USAMapLive
+    get "/", PageController, :index
+    get "/:fips", PageController, :show
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", RonaWeb do
-  #   pipe_through :api
-  # end
 end

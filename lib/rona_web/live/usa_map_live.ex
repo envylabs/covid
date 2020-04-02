@@ -1,18 +1,12 @@
 defmodule RonaWeb.USAMapLive do
   use Phoenix.LiveView
 
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     end_of_feb = Date.from_iso8601!("2020-02-29")
 
     dates =
       Rona.Cases.list_dates(Rona.Cases.CountyReport)
       |> Enum.filter(&(Date.compare(&1, end_of_feb) == :gt))
-
-    states = Rona.Places.list_states()
-    selected_state = List.first(states)
-
-    counties = Rona.Places.list_counties(selected_state)
-    selected_county = List.first(counties)
 
     socket =
       socket
@@ -21,34 +15,9 @@ defmodule RonaWeb.USAMapLive do
       |> assign(:dates, dates)
       |> assign(:json_dates, Jason.encode!(dates))
       |> assign(:max_date_index, length(dates) - 1)
-      |> assign(:states, states)
-      |> assign(:selected_state, selected_state.id)
-      |> assign(:counties, counties)
-      |> assign(:selected_county, selected_county.id)
+      |> assign(:zoom, Map.get(session, "fips", "00"))
 
-    {:ok, socket |> fetch_map_data() |> fetch_location_data()}
-  end
-
-  def handle_event("select_location", %{"state" => state_id, "county" => county_id}, socket) do
-    state_id = String.to_integer(state_id)
-    county_id = String.to_integer(county_id)
-
-    selected_state = Enum.find(socket.assigns.states, &(&1.id == state_id))
-
-    counties =
-      if state_id == socket.assigns.selected_state,
-        do: socket.assigns.counties,
-        else: Rona.Places.list_counties(selected_state)
-
-    selected_county = Enum.find(counties, &(&1.id == county_id)) || List.first(counties)
-
-    socket =
-      socket
-      |> assign(:selected_state, selected_state.id)
-      |> assign(:counties, counties)
-      |> assign(:selected_county, selected_county.id)
-
-    {:noreply, fetch_location_data(socket)}
+    {:ok, fetch_map_data(socket)}
   end
 
   def handle_event("update_settings", params, socket) do
@@ -57,7 +26,7 @@ defmodule RonaWeb.USAMapLive do
       |> assign(:series, String.to_atom(params["series"]))
       |> assign(:population_scale, params["population_scale"] || false)
 
-    {:noreply, socket |> fetch_map_data() |> fetch_location_data()}
+    {:noreply, fetch_map_data(socket)}
   end
 
   def render(assigns) do
@@ -68,42 +37,22 @@ defmodule RonaWeb.USAMapLive do
     data =
       Rona.Cases.for_dates(Rona.Cases.CountyReport, socket.assigns.dates)
       |> Enum.reduce(%{}, fn report, result ->
-        date_data = Map.get(result, report.date, %{})
+        if socket.assigns.zoom == "00" ||
+             socket.assigns.zoom == String.slice(report.county.fips, 0, 2) do
+          date_data = Map.get(result, report.date, %{})
 
-        value =
-          scale_value(Map.get(report, socket.assigns.series), socket, report.county.population)
+          value =
+            scale_value(Map.get(report, socket.assigns.series), socket, report.county.population)
 
-        date_data = Map.put(date_data, report.county.fips, value)
-        Map.put(result, report.date, date_data)
+          date_data = Map.put(date_data, report.county.fips, value)
+          Map.put(result, report.date, date_data)
+        else
+          result
+        end
       end)
 
     socket
     |> assign(:map_data, Jason.encode!(data))
-    |> assign(
-      :last_update,
-      Rona.Cases.latest_update(Rona.Cases.CountyReport)
-      |> Timex.Timezone.convert(Timex.Timezone.local())
-    )
-  end
-
-  defp fetch_location_data(socket) do
-    county = Enum.find(socket.assigns.counties, &(&1.id == socket.assigns.selected_county))
-
-    data =
-      county.reports
-      |> Enum.reduce(%{}, fn report, result ->
-        date_data = %{
-          confirmed: scale_value(report.confirmed, socket, county.population),
-          confirmed_delta: scale_value(report.confirmed_delta, socket, county.population),
-          deceased: scale_value(report.deceased, socket, county.population),
-          deceased_delta: scale_value(report.deceased_delta, socket, county.population)
-        }
-
-        Map.put(result, report.date, date_data)
-      end)
-
-    socket
-    |> assign(:location_data, Jason.encode!(data))
   end
 
   defp scale_value(value, socket, population) do

@@ -36,6 +36,7 @@ defmodule Rona.Places do
   """
   def list_states do
     State
+    |> where([s], s.population > 0)
     |> order_by(:name)
     |> preload(:reports)
     |> Repo.all()
@@ -136,6 +137,12 @@ defmodule Rona.Places do
       })
       |> Repo.insert!()
     end
+  end
+
+  def get_state(fips) do
+    State
+    |> where([s], s.fips == ^fips)
+    |> Repo.one!()
   end
 
   def update_state(%State{} = state, attrs) do

@@ -1,0 +1,3 @@
+<h2><%= @state.name %></h2>
+
+<%= live_render(@conn, RonaWeb.USAMapLive, session: %{"fips" => @state.fips}) %>

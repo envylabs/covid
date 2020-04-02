@@ -46,7 +46,7 @@ a {
 }
 a:hover,
 a:focus {
-  color: mediumslateblue;
+  color: rgb(99, 107, 153);
 }
 
 p {
@@ -107,7 +107,7 @@ svg {
 }
 .form-button:hover,
 .form-button:focus {
-  color: mediumslateblue;
+  color: rgb(99, 107, 153);
 }
 
 .form-checkbox {
@@ -169,7 +169,7 @@ svg {
 }
 .form-select select:hover,
 .form-select select:focus {
-  color: mediumslateblue;
+  color: rgb(99, 107, 153);
 }
 
 /* *************************************

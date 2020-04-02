@@ -30,6 +30,7 @@
 <div class="layout-breakout">
   <div id="map" phx-update="ignore"></div>
   <div id="hook" phx-hook="USAMap" data-target="map" data-mapdata="<%= @map_data %>" data-label="<%= label_for(@series) %>" data-percent="<%= if @population_scale, do: "true", else: "" %>"></div>
+  <p class="credit">Map adapted from <a href="https://observablehq.com/@d3/bivariate-choropleth">Bivariate Choropleth</a> by <a href="https://observablehq.com/@mbostock">Mike Bostock</a>.</p>
 </div>
 
 <%# <form phx-change="select_location"> %>

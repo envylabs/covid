@@ -41,11 +41,20 @@ h1 {
 
 /* ----- Markup ----- */
 
+a {
+  color: #111;
+}
+a:hover,
+a:focus {
+  color: mediumslateblue;
+}
+
 p {
   margin: 1.6rem 0;
 }
 
 time {
+  color: #777;
   display: block;
   font-size: 0.7579em;
   line-height: 1.2rem;
@@ -57,6 +66,16 @@ svg {
   display: block;
   max-width: 100%;
   width: 100%;
+}
+
+/* *************************************
+  Credit
+************************************* */
+
+.credit {
+  color: #777;
+  font-size: 0.7579em;
+  text-align: center;
 }
 
 /* *************************************
@@ -73,21 +92,27 @@ svg {
   -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
-  background: purple;
-  border: 0;
+  background: transparent;
+  border: 1px solid #bbb;
   box-sizing: border-box;
-  color: white;
+  color: #111;
   cursor: pointer;
   display: inline-block;
+  font-family: 'Roboto', sans-serif;
   font-size: 0.8706em;
   font-weight: bold;
   line-height: 1.6rem;
-  padding: 0.4rem 0;
+  padding: calc(0.4rem - 1px) 0;
   width: 8rem;
+}
+.form-button:hover,
+.form-button:focus {
+  color: mediumslateblue;
 }
 
 .form-checkbox {
   align-items: center;
+  cursor: pointer;
   display: inline-flex;
   font-size: 0.8706em;
   margin-left: 0.8rem;
@@ -110,8 +135,8 @@ svg {
   position: relative;
 }
 .form-select::after {
-  border-bottom: 1px solid purple;
-  border-right: 1px solid purple;
+  border-bottom: 1px solid #333;
+  border-right: 1px solid #333;
   content: '';
   height: 0.4rem;
   pointer-events: none;
@@ -133,12 +158,18 @@ svg {
   border: 1px solid #bbb;
   border-radius: 0;
   box-sizing: border-box;
-  color: #333;
+  color: #111;
   cursor: pointer;
   display: inline-block;
+  font-family: 'Roboto', sans-serif;
   font-size: 0.8706em;
+  font-weight: bold;
   line-height: 1.6rem;
   padding: calc(0.4rem - 1px) 2rem calc(0.4rem - 1px) 0.8rem;
+}
+.form-select select:hover,
+.form-select select:focus {
+  color: mediumslateblue;
 }
 
 /* *************************************

@@ -9,7 +9,7 @@
 <p>Text about clicking on one to see a larger map and per-county data. Blue is new cases per day, orange is deaths per day.</p>
 
 <ul class="chart-grid">
-  <%= for state <- @states |> Enum.sort_by(& Enum.max_by(&1.reports, fn r -> r.confirmed end)) |> Enum.reverse() do %>
+  <%= for state <- @states |> Enum.sort_by(& List.last(Enum.sort_by(&1.reports, fn r -> r.date end)).confirmed_delta) |> Enum.reverse() do %>
     <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => state}) %></li>
   <% end %>
 </ul>

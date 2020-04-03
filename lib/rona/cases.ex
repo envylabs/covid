@@ -186,11 +186,12 @@ defmodule Rona.Cases do
     |> Repo.one()
   end
 
-  def max_confirmed_delta(CountyReport) do
+  def max_confirmed_delta(CountyReport, state) do
     CountyReport
     |> select([r], max(r.confirmed_delta))
     |> join(:left, [r], c in assoc(r, :county))
     |> where([r, c], c.fips != "")
+    |> where([r, c], c.state == ^state)
     |> Repo.one()
   end
 

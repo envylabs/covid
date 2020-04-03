@@ -8,3 +8,9 @@
 
 <h2>Stats Per County</h2>
 <p>Text about data.</p>
+
+<ul class="chart-grid">
+  <%= for county <- @counties |> Enum.sort_by(& List.last(Enum.sort_by(&1.reports, fn r -> r.date end)).confirmed_delta) |> Enum.reverse() do %>
+    <li><%= live_render(@conn, RonaWeb.CountyChartLive, session: %{"county" => county}) %></li>
+  <% end %>
+</ul>

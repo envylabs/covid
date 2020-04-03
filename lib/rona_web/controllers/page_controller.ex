@@ -9,8 +9,9 @@ defmodule RonaWeb.PageController do
 
   def show(conn, %{"fips" => fips}) do
     state = Rona.Places.get_state(fips)
+    counties = Rona.Places.list_counties(state) |> Enum.filter(&(length(&1.reports) > 0))
 
-    render(conn, "show.html", last_update: last_update(), state: state)
+    render(conn, "show.html", last_update: last_update(), state: state, counties: counties)
   end
 
   defp last_update() do

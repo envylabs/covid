@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Covid · Envy Labs</title>
+    <title>U.S. State and County Coronavirus Stats Over Time</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,700;1,400&family=Roboto:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <link rel="icon" type="image/png" sizes="32x32" href="<%= Routes.static_path(@conn, "/images/favicon-32.png") %>">
@@ -16,7 +16,7 @@
     <main role="main" class="layout">
       <%= @inner_content %>
       <div class="layout-footer">
-        <p>Prepared by <a href="https://envylabs.com">Envy Labs</a>.
+        <p>Prepared by <a href="https://envylabs.com">Envy Labs</a>. Map adapted from <a href="https://observablehq.com/@d3/bivariate-choropleth">Bivariate Choropleth</a> by <a href="https://observablehq.com/@mbostock">Mike Bostock</a>.
       </div>
     </main>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>

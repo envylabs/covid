@@ -39,6 +39,14 @@ h1 {
   margin: 0 0 0.4rem;
 }
 
+h2 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5157em;
+  font-weight: bold;
+  line-height: 1.6rem;
+  margin: 0 0 0.4rem;
+}
+
 /* ----- Markup ----- */
 
 a {
@@ -50,7 +58,7 @@ a:focus {
 }
 
 p {
-  margin: 1.6rem 0;
+  margin: 0 0 1.6rem;
 }
 
 time {
@@ -58,6 +66,7 @@ time {
   display: block;
   font-size: 0.7579em;
   line-height: 1.2rem;
+  margin-bottom: 1.6rem;
 }
 
 /* ----- Media ----- */
@@ -66,16 +75,6 @@ svg {
   display: block;
   max-width: 100%;
   width: 100%;
-}
-
-/* *************************************
-  Credit
-************************************* */
-
-.credit {
-  color: #777;
-  font-size: 0.7579em;
-  text-align: center;
 }
 
 /* *************************************
@@ -195,8 +194,13 @@ svg {
 
 /* ----- Subcomponents ----- */
 
+.layout-back {
+  display: inline-block;
+  margin-bottom: 0.4rem;
+}
+
 .layout-breakout {
-  margin: 2rem 0;
+  margin: 2rem 0 4rem;
 }
 @media (min-width: 50em) {
   .layout-breakout {
@@ -206,13 +210,16 @@ svg {
 }
 @media (min-width: 60em) {
   .layout-breakout {
-    margin-left: -15vw;
-    margin-right: -15vw;
+    margin-left: -10vw;
+    margin-right: -10vw;
   }
 }
 
 .layout-footer p {
-  margin-bottom: 0;
+  color: #777;
+  font-size: 0.7579em;
+  margin: 1.6rem 0 0;
+  text-align: center;
 }
 
 .layout-timeline {

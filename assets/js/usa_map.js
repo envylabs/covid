@@ -94,7 +94,7 @@ const prepareMap = (obj) => {
   obj.zoom = obj.el.dataset.zoom;
 
   obj.maxValue = Object.values(obj.data).map(d => Object.values(d)).flat().reduce((a, b) => Math.max(a, b));
-  const colorScheme = obj.zoom === "00" ? d3.interpolateBuPu : d3.interpolateYlOrBr;
+  const colorScheme = obj.zoom === "00" ? d3.interpolateBuPu : d3.interpolateBuGn;
   obj.x = d3.scaleSequential(colorScheme)
     .domain([0, Math.sqrt(obj.maxValue) / 2]);
 }

@@ -5,6 +5,9 @@
 
 <%= live_render(@conn, RonaWeb.USAMapLive) %>
 
+<h2>Stats Per State</h2>
+<p>Text about clicking on one to see a larger map and per-county data.</p>
+
 <%= for state <- @states do %>
   <%= link(state.name, to: "/#{state.fips}") %>
  |

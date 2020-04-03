@@ -14,6 +14,7 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import LiveSocket from "phoenix_live_view"
 
+import AreaChart from "./area_chart"
 import DateRange from "./date_range"
 import Play from "./play"
 import USAMap from "./usa_map"
@@ -26,6 +27,7 @@ window.rona = {
 };
 
 let Hooks = {
+	AreaChart: AreaChart,
 	DateRange: DateRange,
 	Play: Play,
 	USAMap: USAMap

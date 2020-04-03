@@ -100,15 +100,15 @@ const prepareMap = (obj) => {
 }
 
 export const initMap = (obj) => {
-  obj.target = document.getElementById(obj.el.dataset.target);
   prepareMap(obj);
 
   d3.json("/data/us-counties.json").then((us) => {
     obj.us = us;
     obj.states = new Map(us.objects.states.geometries.map(d => [d.id, d.properties]));
 
-    const svg = d3.select(obj.target)
+    const svg = d3.select(obj.el)
       .append("svg")
+      .attr("class", "map")
       .attr("viewBox", viewboxes[obj.zoom]);
 
     svg.append("g")
@@ -132,7 +132,7 @@ export const initMap = (obj) => {
 export const updateMap = (obj) => {
   prepareMap(obj);
 
-  const svg = d3.select(obj.target)
+  const svg = d3.select(obj.el)
     .select("svg")
     .attr("viewBox", viewboxes[obj.zoom]);
 

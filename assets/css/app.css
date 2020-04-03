@@ -47,6 +47,14 @@ h2 {
   margin: 0 0 0.4rem;
 }
 
+h3 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.81em;
+  font-weight: normal;
+  line-height: 1rem;
+  margin: 0 0 0.2rem;
+}
+
 /* ----- Markup ----- */
 
 a {
@@ -71,10 +79,15 @@ time {
 
 /* ----- Media ----- */
 
-svg {
+svg.map {
   display: block;
   max-width: 100%;
   width: 100%;
+}
+
+svg.chart {
+  display: block;
+  width: 200px;
 }
 
 /* *************************************
@@ -319,4 +332,22 @@ input[type=range]:focus::-ms-fill-lower {
 }
 input[type=range]:focus::-ms-fill-upper {
   background: rgb(164, 173, 219);
+}
+
+
+/* PLEASE FIX ME */
+
+.chart-grid {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.chart-grid li {
+  display: inline-block;
+  text-align: center;
+}
+
+.chart-grid li a {
+  text-decoration: none;
 }

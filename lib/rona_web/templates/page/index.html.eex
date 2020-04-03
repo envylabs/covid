@@ -6,9 +6,10 @@
 <%= live_render(@conn, RonaWeb.USAMapLive) %>
 
 <h2>Stats Per State</h2>
-<p>Text about clicking on one to see a larger map and per-county data.</p>
+<p>Text about clicking on one to see a larger map and per-county data. Blue is new cases per day, orange is deaths per day.</p>
 
-<%= for state <- @states do %>
-  <%= link(state.name, to: "/#{state.fips}") %>
- |
-<% end %>
+<ul class="chart-grid">
+  <%= for state <- @states |> Enum.sort_by(& Enum.max_by(&1.reports, fn r -> r.confirmed end)) |> Enum.reverse() do %>
+    <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => state}) %></li>
+  <% end %>
+</ul>

@@ -163,8 +163,8 @@ defmodule Rona.Data do
       end
     end)
     |> Enum.each(fn {state, {cases, deaths}} ->
-      Rona.Places.find_state("?", state)
-      |> Rona.Cases.file_report(date, cases, deaths)
+      s = Rona.Places.get_state_by_name(state)
+      if s, do: Rona.Cases.file_report(s, date, cases, deaths)
     end)
   end
 

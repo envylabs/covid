@@ -1,0 +1,4 @@
+<%= link(to: Routes.page_path(RonaWeb.Endpoint, :show, @state.fips)) do %>
+  <h3><%= @state.name %></h3>
+  <div id="chart-<%= @state.fips %>" phx-hook="AreaChart" phx-update="ignore" data-chartdata="<%= @chart_data %>" data-max="<%= @max_value %>"></div>
+<% end %>

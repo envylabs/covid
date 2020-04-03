@@ -142,7 +142,14 @@ defmodule Rona.Places do
   def get_state(fips) do
     State
     |> where([s], s.fips == ^fips)
-    |> Repo.one!()
+    |> preload(:reports)
+    |> Repo.one()
+  end
+
+  def get_state_by_name(name) do
+    State
+    |> where([s], s.name == ^name)
+    |> Repo.one()
   end
 
   def update_state(%State{} = state, attrs) do

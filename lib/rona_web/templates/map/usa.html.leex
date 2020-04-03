@@ -1,5 +1,5 @@
 <div class="form" id="controls">
-  <form phx-change="update_settings">
+  <form class="layout-controls" phx-change="update_settings">
     <div class="form-select">
       <select name="series">
         <option value="confirmed" <%= if @series == :confirmed, do: "selected", else: "" %>>Total Cases</option>
@@ -15,10 +15,10 @@
     </label>
   </form>
 
-  <div class="layout-timeline">
+  <div class="layout-controls">
+    <button class="form-button" id="play" phx-hook="Play">Play</button>
     <input class="form-range" id="date-range" type="range" min="0" max="<%= @max_date_index %>" value="<%= @max_date_index %>" phx-hook="DateRange" data-dates="<%= @json_dates %>" />
     <span class="form-date" id="current-date"><%= List.last(@dates) %></span>
-    <button class="form-button" id="play" phx-hook="Play">Play</button>
   </div>
 </div>
 

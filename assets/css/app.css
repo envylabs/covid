@@ -97,12 +97,13 @@ svg {
   color: #111;
   cursor: pointer;
   display: inline-block;
+  flex-shrink: 0;
   font-family: 'Roboto', sans-serif;
   font-size: 0.8706em;
   font-weight: bold;
   line-height: 1.6rem;
-  padding: calc(0.4rem - 1px) 0;
-  width: 8rem;
+  padding: calc(0.2rem - 1px) 0;
+  width: 7.6rem;
 }
 .form-button:hover,
 .form-button:focus {
@@ -114,19 +115,20 @@ svg {
   cursor: pointer;
   display: inline-flex;
   font-size: 0.8706em;
-  margin-left: 0.8rem;
+}
+.form-checkbox:hover,
+.form-checkbox:focus {
+  color: rgb(99, 107, 153);
 }
 .form-checkbox > * + * {
   margin-left: 0.4rem;
 }
 
 .form-date {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8706em;
   font-weight: bold;
   white-space: nowrap;
-}
-
-.form-range {
-  width: 100%;
 }
 
 .form-select {
@@ -140,8 +142,8 @@ svg {
   height: 0.4rem;
   pointer-events: none;
   position: absolute;
-  right: 1rem;
-  top: 0.85rem;
+  right: 0.8rem;
+  top: 0.6rem;
   transform: rotate(45deg);
   width: 0.4rem;
 }
@@ -164,7 +166,8 @@ svg {
   font-size: 0.8706em;
   font-weight: bold;
   line-height: 1.6rem;
-  padding: calc(0.4rem - 1px) 2rem calc(0.4rem - 1px) 0.8rem;
+  padding: calc(0.2rem - 1px) 1.8rem calc(0.2rem - 1px) 0.6rem;
+  width: 7.6rem;
 }
 .form-select select:hover,
 .form-select select:focus {
@@ -215,6 +218,15 @@ svg {
   }
 }
 
+.layout-controls {
+  align-items: center;
+  display: flex;
+  margin: 0.4rem 0;
+}
+.layout-controls > * + * {
+  margin-left: 0.8rem;
+}
+
 .layout-footer p {
   color: #777;
   font-size: 0.7579em;
@@ -222,12 +234,89 @@ svg {
   text-align: center;
 }
 
-.layout-timeline {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  margin: 0.8rem 0;
+/* *************************************
+  Range Madness
+************************************* */
+
+input[type=range] {
+  -webkit-appearance: none;
+  margin-bottom: 18px;
+  margin-top: 18px;
+  width: 100%;
 }
-.layout-timeline > * + * {
-  margin-left: 0.8rem;
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  background: #bbb;
+  border-radius: 1.3px;
+  border: 0;
+  cursor: pointer;
+  height: 8.4px;
+  width: 100%;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: #333;
+  border-radius: 3px;
+  border: 0;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  height: 30px;
+  margin-top: -11px;
+  width: 16px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: rgb(164, 173, 219);
+}
+input[type=range]::-moz-range-track {
+  background: #bbb;
+  border-radius: 1.3px;
+  border: 0;
+  cursor: pointer;
+  height: 8.4px;
+  width: 100%;
+}
+input[type=range]::-moz-range-thumb {
+  background: #333;
+  border-radius: 3px;
+  border: 0;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  height: 30px;
+  width: 16px;
+}
+input[type=range]::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+  cursor: pointer;
+  height: 8.4px;
+  width: 100%;
+}
+input[type=range]::-ms-fill-lower {
+  background: #bbb;
+  border: 0;
+  border-radius: 2.6px;
+}
+input[type=range]::-ms-fill-upper {
+  background: #bbb;
+  border: 0;
+  border-radius: 2.6px;
+}
+input[type=range]::-ms-thumb {
+  background: #333;
+  border-radius: 3px;
+  border: 0;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  height: 30px;
+  width: 16px;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: rgb(164, 173, 219);
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: rgb(164, 173, 219);
 }

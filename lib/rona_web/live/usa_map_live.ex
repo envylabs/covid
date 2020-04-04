@@ -34,25 +34,35 @@ defmodule RonaWeb.USAMapLive do
   end
 
   defp fetch_map_data(socket) do
+    cache_key =
+      "map-#{socket.assigns.zoom}-#{socket.assigns.series}-#{socket.assigns.population_scale}"
+
     data =
-      Rona.Cases.for_dates(Rona.Cases.CountyReport, socket.assigns.dates)
-      |> Enum.reduce(%{}, fn report, result ->
-        if socket.assigns.zoom == "00" ||
-             socket.assigns.zoom == String.slice(report.county.fips, 0, 2) do
-          date_data = Map.get(result, report.date, %{})
+      Rona.Data.cache(cache_key, List.last(socket.assigns.dates), fn ->
+        Rona.Cases.for_dates(Rona.Cases.CountyReport, socket.assigns.dates)
+        |> Enum.reduce(%{}, fn report, result ->
+          if socket.assigns.zoom == "00" ||
+               socket.assigns.zoom == String.slice(report.county.fips, 0, 2) do
+            date_data = Map.get(result, report.date, %{})
 
-          value =
-            scale_value(Map.get(report, socket.assigns.series), socket, report.county.population)
+            value =
+              scale_value(
+                Map.get(report, socket.assigns.series),
+                socket,
+                report.county.population
+              )
 
-          date_data = Map.put(date_data, report.county.fips, value)
-          Map.put(result, report.date, date_data)
-        else
-          result
-        end
+            date_data = Map.put(date_data, report.county.fips, value)
+            Map.put(result, report.date, date_data)
+          else
+            result
+          end
+        end)
+        |> Jason.encode!()
       end)
 
     socket
-    |> assign(:map_data, Jason.encode!(data))
+    |> assign(:map_data, data)
   end
 
   defp scale_value(value, socket, population) do

@@ -24,21 +24,26 @@ defmodule RonaWeb.StateChartLive do
   end
 
   defp fetch_chart_data(socket) do
-    data =
-      socket.assigns.dates
-      |> Enum.map(fn date ->
-        report = Enum.find(socket.assigns.state.reports, &(&1.date == date))
+    cache_key = "chart-#{socket.assigns.state.fips}"
 
-        if report,
-          do: %{
-            t: date,
-            c: report.confirmed_delta - report.deceased_delta,
-            d: report.deceased_delta
-          },
-          else: %{t: date, c: 0, d: 0}
+    data =
+      Rona.Data.cache(cache_key, List.last(socket.assigns.dates), fn ->
+        socket.assigns.dates
+        |> Enum.map(fn date ->
+          report = Enum.find(socket.assigns.state.reports, &(&1.date == date))
+
+          if report,
+            do: %{
+              t: date,
+              c: report.confirmed_delta - report.deceased_delta,
+              d: report.deceased_delta
+            },
+            else: %{t: date, c: 0, d: 0}
+        end)
+        |> Jason.encode!()
       end)
 
     socket
-    |> assign(:chart_data, Jason.encode!(data))
+    |> assign(:chart_data, data)
   end
 end

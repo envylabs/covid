@@ -7,9 +7,30 @@ defmodule Rona.Data do
   end
 
   def init(state) do
+    :ets.new(:data_cache, [:set, :public, :named_table])
     # schedule_work(:refresh_us_data, 5_000)
     # schedule_work(:refresh_global_data, 30_000)
     {:ok, state}
+  end
+
+  def cache(key, date, f) do
+    cached_data = :ets.lookup(:data_cache, key)
+
+    if cached_data == [] do
+      data = f.()
+      :ets.insert(:data_cache, {key, date, data})
+      data
+    else
+      [{_, cache_date, data}] = cached_data
+
+      if cache_date == date do
+        data
+      else
+        data = f.()
+        :ets.insert(:data_cache, {key, date, data})
+        data
+      end
+    end
   end
 
   def handle_info(:refresh_global_data, state) do

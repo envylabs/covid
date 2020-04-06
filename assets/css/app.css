@@ -103,7 +103,7 @@ svg.chart-large {
   border: 1px solid #eee;
   display: block;
   grid-column-end: span 1;
-  padding: 1.2rem 1.2rem 0.8rem;
+  padding: 1.2rem 1.2rem 0.6rem;
 }
 a.chart {
   border-color: #bbb;
@@ -137,6 +137,12 @@ a.chart:focus {
 
 /* ----- Subcomponents ----- */
 
+.chart .domain {
+  display: none;
+}
+.chart .tick line {
+  stroke: rgba(0, 0, 0, 0.2);
+}
 .chart .tick text {
   text-anchor: end;
 }
@@ -264,7 +270,7 @@ a.chart:focus {
 
 .layout-back {
   display: inline-block;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.8rem;
 }
 
 .layout-breakout {

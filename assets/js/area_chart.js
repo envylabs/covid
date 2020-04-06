@@ -4,8 +4,8 @@ const width = [200, 345];
 const height = [150, 230];
 
 const margin = [
-  {top: 10, right: 1, bottom: 20, left: 40},
-  {top: 10, right: 1, bottom: 20, left: 60}
+  {top: 10, right: 0, bottom: 20, left: 40},
+  {top: 10, right: 0, bottom: 20, left: 60}
 ];
 
 const colors = [
@@ -19,8 +19,8 @@ const xAxis = (g, obj) => {
 }
 
 const yAxis = (g, obj) => {
-  g.attr("transform", `translate(${margin[obj.size].left},0)`)
-    .call(d3.axisLeft(obj.y).tickValues([0, obj.max]))
+  g.attr("transform", `translate(${width[obj.size] + margin[obj.size].left},0)`)
+    .call(d3.axisLeft(obj.y).tickSize(width[obj.size]).tickValues([0, obj.max]))
     .call(g => g.select(".domain").remove());
 }
 

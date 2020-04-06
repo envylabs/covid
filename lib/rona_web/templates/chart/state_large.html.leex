@@ -1,0 +1,2 @@
+<h3><%= @title %></h3>
+<div id="chart-<%= @state.fips %>-<%= @title %>" phx-hook="AreaChart" phx-update="ignore" data-chartdata="<%= @chart_data %>" data-max="<%= @max_value %>" data-color-scheme=1 data-size=1></div>

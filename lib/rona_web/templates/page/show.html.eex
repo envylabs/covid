@@ -6,6 +6,14 @@
 
 <%= live_render(@conn, RonaWeb.USAMapLive, session: %{"fips" => @state.fips}) %>
 
+<h2>Statewide Totals</h2>
+<p>Text about data.</p>
+
+<ul class="chart-grid">
+  <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => @state, "size" => "large", "title" => "Cumulative Totals", "totals" => true}) %></li>
+  <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => @state, "size" => "large", "title" => "New Per Day"}) %></li>
+</ul>
+
 <h2>Stats Per County</h2>
 <p>Text about data.</p>
 

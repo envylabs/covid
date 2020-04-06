@@ -1,20 +1,25 @@
-const width = 200;
-const height = 100;
+const classes = ["chart", "chart-large"];
 
-const margin = ({top: 10, right: 10, bottom: 30, left: 40});
+const width = [200, 345];
+const height = [100, 230];
+
+const margin = [
+  {top: 10, right: 10, bottom: 30, left: 40},
+  {top: 10, right: 10, bottom: 30, left: 60}
+];
 
 const colors = [
-	["rgb(136, 68, 157)", "rgb(204, 221, 236)"],
-	["rgb(33, 139, 72)", "rgb(193, 232, 224)"]
+  ["rgb(136, 68, 157)", "rgb(204, 221, 236)"],
+  ["rgb(33, 139, 72)", "rgb(193, 232, 224)"]
 ];
 
 const xAxis = (g, obj) => {
-  g.attr("transform", `translate(0,${height - margin.bottom})`)
+  g.attr("transform", `translate(0,${height[obj.size] - margin[obj.size].bottom})`)
     .call(d3.axisBottom(obj.x).ticks(2).tickSizeOuter(0));
 }
 
 const yAxis = (g, obj) => {
-  g.attr("transform", `translate(${margin.left},0)`)
+  g.attr("transform", `translate(${margin[obj.size].left},0)`)
     .call(d3.axisLeft(obj.y).ticks(3))
     .call(g => g.select(".domain").remove());
 }
@@ -23,17 +28,18 @@ const prepareChart = (obj) => {
   const data = JSON.parse(obj.el.dataset.chartdata).map(d => ({t: new Date(d.t), c: d.c, d: d.d}));
   obj.data = d3.stack().keys(["d", "c"])(data);
   obj.max = obj.el.dataset.max;
+  obj.size = obj.el.dataset.size || 0;
 
   obj.color = d3.scaleOrdinal()
     .range(colors[obj.el.dataset.colorScheme]);
 
   obj.x = d3.scaleUtc()
     .domain(d3.extent(data, d => d.t))
-    .range([margin.left, width - margin.right]);
+    .range([margin[obj.size].left, width[obj.size] - margin[obj.size].right]);
 
   obj.y = d3.scaleLinear()
     .domain([0, obj.max]).nice()
-    .range([height - margin.bottom, margin.top]);
+    .range([height[obj.size] - margin[obj.size].bottom, margin[obj.size].top]);
 
   obj.area = d3.area()
     .x(d => obj.x(d.data.t))
@@ -46,8 +52,8 @@ export const initChart = (obj) => {
 
   const svg = d3.select(obj.el)
     .append("svg")
-    .attr("class", "chart")
-    .attr("viewBox", [0, 0, width, height]);
+    .attr("class", classes[obj.size])
+    .attr("viewBox", [0, 0, width[obj.size], height[obj.size]]);
 
   svg.append("g")
     .selectAll("path")

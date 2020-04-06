@@ -1,4 +1,4 @@
-const classes = ["chart", "chart-large"];
+const classes = ["chart-svg", "chart-large"];
 
 const width = [200, 345];
 const height = [100, 230];

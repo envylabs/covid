@@ -9,16 +9,20 @@
 <h2>Statewide Totals</h2>
 <p>Text about data.</p>
 
-<ul class="chart-grid">
-  <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => @state, "size" => "large", "title" => "Cumulative Totals", "totals" => true}) %></li>
-  <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => @state, "size" => "large", "title" => "New Per Day"}) %></li>
-</ul>
+<div class="layout-breakout">
+  <ul class="has-chart has-chart--2">
+    <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => @state, "size" => "large", "title" => "Cumulative Totals", "totals" => true}) %></li>
+    <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => @state, "size" => "large", "title" => "New Per Day"}) %></li>
+  </ul>
+</div>
 
 <h2>Stats Per County</h2>
 <p>Text about data.</p>
 
-<ul class="chart-grid">
-  <%= for county <- @counties |> Enum.sort_by(& List.last(Enum.sort_by(&1.reports, fn r -> r.date end)).confirmed_delta) |> Enum.reverse() do %>
-    <li><%= live_render(@conn, RonaWeb.CountyChartLive, session: %{"county" => county}) %></li>
-  <% end %>
-</ul>
+<div class="layout-breakout">
+  <ul class="has-chart">
+    <%= for county <- @counties |> Enum.sort_by(& List.last(Enum.sort_by(&1.reports, fn r -> r.date end)).confirmed_delta) |> Enum.reverse() do %>
+      <li><%= live_render(@conn, RonaWeb.CountyChartLive, session: %{"county" => county}) %></li>
+    <% end %>
+  </ul>
+</div>

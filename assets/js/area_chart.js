@@ -1,11 +1,11 @@
 const classes = ["chart-svg", "chart-large"];
 
 const width = [200, 345];
-const height = [100, 230];
+const height = [150, 230];
 
 const margin = [
-  {top: 10, right: 10, bottom: 30, left: 40},
-  {top: 10, right: 10, bottom: 30, left: 60}
+  {top: 10, right: 1, bottom: 20, left: 40},
+  {top: 10, right: 1, bottom: 20, left: 60}
 ];
 
 const colors = [
@@ -15,18 +15,19 @@ const colors = [
 
 const xAxis = (g, obj) => {
   g.attr("transform", `translate(0,${height[obj.size] - margin[obj.size].bottom})`)
-    .call(d3.axisBottom(obj.x).ticks(2).tickSizeOuter(0));
+    .call(d3.axisBottom(obj.x).tickFormat(d3.timeFormat("%b %d")).tickSizeOuter(0).tickValues([obj.date]));
 }
 
 const yAxis = (g, obj) => {
   g.attr("transform", `translate(${margin[obj.size].left},0)`)
-    .call(d3.axisLeft(obj.y).ticks(3))
+    .call(d3.axisLeft(obj.y).tickValues([0, obj.max]))
     .call(g => g.select(".domain").remove());
 }
 
 const prepareChart = (obj) => {
   const data = JSON.parse(obj.el.dataset.chartdata).map(d => ({t: new Date(d.t), c: d.c, d: d.d}));
   obj.data = d3.stack().keys(["d", "c"])(data);
+  obj.date = data[data.length - 1].t;
   obj.max = obj.el.dataset.max;
   obj.size = obj.el.dataset.size || 0;
 

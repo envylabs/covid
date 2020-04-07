@@ -56,6 +56,11 @@ const viewboxes = {
   "56": [215, 140, 180, 112.62], // Wyoming
 }
 
+const colorSchemes = [
+	d3.schemeBuPu[9].slice(1),
+	d3.schemeBuGn[9].slice(1)
+];
+
 const color = (obj, value) => {
   if (value == null) { return "#ffffff" }
   return obj.x(Math.log10(value));
@@ -94,7 +99,7 @@ const prepareMap = (obj) => {
   obj.zoom = obj.el.dataset.zoom;
 
   obj.maxValue = Object.values(obj.data).map(d => Object.values(d)).flat().reduce((a, b) => Math.max(a, b));
-  const colorScheme = obj.zoom === "00" ? d3.interpolateBuPu : d3.interpolateBuGn;
+	const colorScheme = d3.interpolateRgbBasis(colorSchemes[obj.zoom === "00" ? 0: 1]);
   obj.x = d3.scaleSequential(colorScheme)
     .domain([0, Math.log10(obj.maxValue)]);
 }

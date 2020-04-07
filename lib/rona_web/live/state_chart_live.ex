@@ -1,25 +1,23 @@
 defmodule RonaWeb.StateChartLive do
   use Phoenix.LiveView
 
-  def mount(_params, %{"state" => state} = session, socket) do
+  def mount(_params, %{"state" => state, "dates" => dates} = session, socket) do
     size = Map.get(session, "size", "small")
     totals = Map.get(session, "totals", false)
 
-    end_of_feb = Date.from_iso8601!("2020-02-29")
-
-    dates =
-      Rona.Cases.list_dates(Rona.Cases.CountyReport)
-      |> Enum.filter(&(Date.compare(&1, end_of_feb) == :gt))
-
     max_value =
-      if totals do
-        if size == "small",
-          do: Rona.Cases.max_confirmed(Rona.Cases.StateReport),
-          else: Rona.Cases.max_confirmed(Rona.Cases.StateReport, state)
+      if Map.get(session, "max_value") do
+        Map.get(session, "max_value")
       else
-        if size == "small",
-          do: Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport),
-          else: Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport, state)
+        if totals do
+          if size == "small",
+            do: Rona.Cases.max_confirmed(Rona.Cases.StateReport),
+            else: Rona.Cases.max_confirmed(Rona.Cases.StateReport, state)
+        else
+          if size == "small",
+            do: Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport),
+            else: Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport, state)
+        end
       end
 
     socket =

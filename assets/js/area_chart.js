@@ -1,7 +1,7 @@
 const classes = ["chart-svg", "chart-large"];
 
-const width = [200, 345];
-const height = [150, 230];
+const width = [230, 400];
+const height = [160, 230];
 
 const margin = [
   {top: 10, right: 0, bottom: 20, left: 40},

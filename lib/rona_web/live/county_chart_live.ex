@@ -1,15 +1,7 @@
 defmodule RonaWeb.CountyChartLive do
   use Phoenix.LiveView
 
-  def mount(_params, %{"county" => county}, socket) do
-    end_of_feb = Date.from_iso8601!("2020-02-29")
-
-    dates =
-      Rona.Cases.list_dates(Rona.Cases.CountyReport)
-      |> Enum.filter(&(Date.compare(&1, end_of_feb) == :gt))
-
-    max_value = Rona.Cases.max_confirmed_delta(Rona.Cases.CountyReport, county.state)
-
+  def mount(_params, %{"county" => county, "dates" => dates, "max_value" => max_value}, socket) do
     socket =
       socket
       |> assign(:county, county)

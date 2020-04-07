@@ -6,12 +6,12 @@
 <%= live_render(@conn, RonaWeb.USAMapLive) %>
 
 <h2>Stats Per State</h2>
-<p>Text about clicking on one to see a larger map and per-county data. Blue is new cases per day, orange is deaths per day.</p>
+<p>Text about clicking on one to see a larger map and per-county data.</p>
 
 <div class="layout-breakout">
   <ul class="has-chart">
-    <%= for state <- @states |> Enum.sort_by(& List.last(Enum.sort_by(&1.reports, fn r -> r.date end)).confirmed_delta) |> Enum.reverse() do %>
-      <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => state}) %></li>
+    <%= for state <- @states do %>
+      <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => state, "dates" => @dates, "max_value" => @max_value}) %></li>
     <% end %>
   </ul>
 </div>

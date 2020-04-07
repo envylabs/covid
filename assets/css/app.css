@@ -370,7 +370,7 @@ a.chart:focus {
 ************************************* */
 
 .swatch {
-  align-items: center;;
+  align-items: center;
   display: inline-flex;
   font-size: 0.8706em;
   font-style: italic;
@@ -387,7 +387,7 @@ a.chart:focus {
 /* ----- Context ----- */
 
 .has-swatch {
-  display: block;
+  display: inline-block;
   margin-top: 0.2rem;
   white-space: nowrap;
 }

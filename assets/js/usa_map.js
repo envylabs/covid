@@ -58,7 +58,7 @@ const viewboxes = {
 
 const color = (obj, value) => {
   if (value == null) { return "#ffffff" }
-  return obj.x(Math.sqrt(value) + Math.sqrt(obj.maxValue) / 10);
+  return obj.x(Math.log10(value));
 };
 
 const label = (obj, d, value) => {
@@ -96,7 +96,7 @@ const prepareMap = (obj) => {
   obj.maxValue = Object.values(obj.data).map(d => Object.values(d)).flat().reduce((a, b) => Math.max(a, b));
   const colorScheme = obj.zoom === "00" ? d3.interpolateBuPu : d3.interpolateBuGn;
   obj.x = d3.scaleSequential(colorScheme)
-    .domain([0, Math.sqrt(obj.maxValue) / 2]);
+    .domain([0, Math.log10(obj.maxValue)]);
 }
 
 export const initMap = (obj) => {

@@ -11,6 +11,8 @@ defmodule RonaWeb.PageLive do
   end
 
   def handle_params(params, _url, socket) do
+    last_date = List.last(socket.assigns.dates)
+
     socket =
       if fips = Map.get(params, "fips") do
         state = Rona.Places.get_state(fips)
@@ -19,9 +21,7 @@ defmodule RonaWeb.PageLive do
           Rona.Places.list_counties(state)
           |> Enum.filter(&(length(&1.reports) > 0))
           |> Enum.filter(&(&1.name != "Unassigned"))
-          |> Enum.sort_by(
-            &List.last(Enum.sort_by(&1.reports, fn r -> r.date end)).confirmed_delta
-          )
+          |> Enum.sort_by(&confirmed_delta_for(&1.reports, last_date))
           |> Enum.reverse()
 
         max_value = Rona.Cases.max_confirmed_delta(Rona.Cases.CountyReport, state.name)
@@ -33,9 +33,7 @@ defmodule RonaWeb.PageLive do
       else
         states =
           Rona.Places.list_states()
-          |> Enum.sort_by(
-            &List.last(Enum.sort_by(&1.reports, fn r -> r.date end)).confirmed_delta
-          )
+          |> Enum.sort_by(&confirmed_delta_for(&1.reports, last_date))
           |> Enum.reverse()
 
         max_value = Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport)
@@ -55,6 +53,12 @@ defmodule RonaWeb.PageLive do
     else
       RonaWeb.PageView.render("index.html", assigns)
     end
+  end
+
+  defp confirmed_delta_for(reports, date) do
+    report = Enum.find(reports, &(&1.date == date))
+
+    if report, do: report.confirmed_delta, else: 0
   end
 
   defp date_range() do

@@ -22,8 +22,7 @@ const xAxis = (g, obj) => {
 const yAxis = (g, obj) => {
   g.attr("transform", `translate(${width[obj.size] + margin[obj.size].left},0)`)
     .attr('class', 'chart-yaxis')
-    .call(d3.axisLeft(obj.y).tickSize(width[obj.size]).tickValues([0, obj.max]).tickPadding(0))
-    .call(g => g.select(".domain").remove());
+    .call(d3.axisLeft(obj.y).tickSize(width[obj.size]).tickValues([0, obj.max]).tickPadding(0));
 }
 
 const prepareChart = (obj) => {
@@ -41,7 +40,7 @@ const prepareChart = (obj) => {
     .range([margin[obj.size].left, width[obj.size] - margin[obj.size].right]);
 
   obj.y = d3.scaleLinear()
-    .domain([0, obj.max]).nice()
+    .domain([0, obj.max])
     .range([height[obj.size] - margin[obj.size].bottom, margin[obj.size].top]);
 
   obj.area = d3.area()

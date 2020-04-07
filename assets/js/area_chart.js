@@ -1,11 +1,11 @@
 const classes = ["chart-svg", "chart-large"];
 
 const width = [170, 400];
-const height = [160, 300];
+const height = [150, 300];
 
 const margin = [
-  {top: 10, right: 0, bottom: 20, left: 0},
-  {top: 10, right: 0, bottom: 20, left: 0}
+  {top: 0, right: 0, bottom: 20, left: 0},
+  {top: 0, right: 0, bottom: 20, left: 0}
 ];
 
 const colors = [
@@ -16,7 +16,7 @@ const colors = [
 const xAxis = (g, obj) => {
   g.attr("transform", `translate(0,${height[obj.size] - margin[obj.size].bottom})`)
     .attr('class', 'chart-xaxis')
-    .call(d3.axisBottom(obj.x).tickFormat(d3.timeFormat("%b %d")).tickSizeOuter(0).tickValues([obj.date]));
+    .call(d3.axisBottom(obj.x).tickFormat(d3.timeFormat("%b %d")).tickSize(2).tickValues([obj.date]));
 }
 
 const yAxis = (g, obj) => {

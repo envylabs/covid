@@ -1,7 +1,7 @@
 const classes = ["chart-svg", "chart-large"];
 
-const width = [170, 400];
-const height = [150, 300];
+const width = [185, 410];
+const height = [160, 220];
 
 const margin = [
   {top: 0, right: 0, bottom: 20, left: 0},
@@ -9,8 +9,8 @@ const margin = [
 ];
 
 const colors = [
-  ["rgb(136, 68, 157)", "rgb(204, 221, 236)"],
-  ["rgb(33, 139, 72)", "rgb(193, 232, 224)"]
+  ["rgb(136, 68, 157)", "rgb(168, 194, 221)"],
+  ["rgb(0, 69, 27)", "rgb(137, 209, 188)"]
 ];
 
 const xAxis = (g, obj) => {

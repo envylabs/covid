@@ -1,4 +1,4 @@
 <%= live_redirect(to: Routes.live_path(@socket, RonaWeb.PageLive, @state.fips), class: 'chart') do %>
-  <h3><%= @state.name %> &rsaquo;</h3>
+  <h3><%= @state.name %></h3>
   <div id="chart-<%= @state.fips %>" phx-hook="AreaChart" phx-update="ignore" data-chartdata="<%= @chart_data %>" data-max="<%= @max_value %>" data-color-scheme=0></div>
 <% end %>

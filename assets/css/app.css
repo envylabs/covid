@@ -29,6 +29,16 @@ body {
   font: normal 100%/1.6rem 'IBM Plex Serif', serif;
 }
 
+.phx-disconnected::after {
+  border-bottom-color: #111;
+  z-index: 20;
+}
+.phx-disconnected::before {
+  background-color: rgba(240, 240, 240, .9);
+  position: fixed;
+  z-index: 10;
+}
+
 /* ----- Headings ----- */
 
 h1 {
@@ -79,9 +89,15 @@ time {
 /* ----- Media ----- */
 
 svg {
+  animation: svg 1000ms ease;
   display: block;
   max-width: 100%;
   width: 100%;
+}
+@keyframes svg {
+  from {
+    opacity: 0;
+  }
 }
 
 /* *************************************
@@ -400,12 +416,13 @@ input[type=range]:focus::-ms-fill-upper {
   align-items: center;;
   display: inline-flex;
   font-size: 0.8706em;
-  margin: 0 0.2rem;
+  font-style: italic;
+  margin-left: 0.4rem;
 }
 
 .swatch span {
   display: inline-block;
-  border-radius: 0.2rem;
+  border-radius: 50%;
   height: 0.8rem;
   margin-right: 0.2rem;
   width: 0.8rem;

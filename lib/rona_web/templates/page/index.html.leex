@@ -3,7 +3,7 @@
 
 <p>Pairing daily data from <a href="https://github.com/nytimes/covid-19-data">The New York Times</a> and <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>, the following visualizations track COVID-19 cases by U.S. state and county. Each metric can be optionally scaled to population, limited to new instances, and animated over&nbsp;time.</p>
 
-<%= live_render(@conn, RonaWeb.USAMapLive) %>
+<%= live_render(@socket, RonaWeb.USAMapLive, id: "map") %>
 
 <h2>Stats Per State</h2>
 <p>Text about clicking on one to see a larger map and per-county data.</p>
@@ -11,7 +11,7 @@
 <div class="layout-breakout">
   <ul class="has-chart">
     <%= for state <- @states do %>
-      <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => state, "dates" => @dates, "max_value" => @max_value}) %></li>
+      <li><%= live_render(@socket, RonaWeb.StateChartLive, id: state.fips, session: %{"state" => state, "dates" => @dates, "max_value" => @max_value}) %></li>
     <% end %>
   </ul>
 </div>

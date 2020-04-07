@@ -4,15 +4,15 @@
 
 <p>Pairing daily data from <a href="https://github.com/nytimes/covid-19-data">The New York Times</a> and <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>, the following visualizations track COVID-19 cases by <%= @state.name %> county. Each metric can be optionally scaled to population, limited to new instances, and animated over&nbsp;time.</p>
 
-<%= live_render(@conn, RonaWeb.USAMapLive, session: %{"fips" => @state.fips}) %>
+<%= live_render(@socket, RonaWeb.USAMapLive, id: "map", session: %{"fips" => @state.fips}) %>
 
 <h2>Statewide Totals</h2>
 <p>Text about data.</p>
 
 <div class="layout-breakout">
   <ul class="has-chart has-chart--2">
-    <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => @state, "size" => "large", "title" => "Cumulative Totals", "totals" => true, "dates" => @dates}) %></li>
-    <li><%= live_render(@conn, RonaWeb.StateChartLive, session: %{"state" => @state, "size" => "large", "title" => "New Per Day", "dates" => @dates}) %></li>
+    <li><%= live_render(@socket, RonaWeb.StateChartLive, id: "state-totals", session: %{"state" => @state, "size" => "large", "title" => "Cumulative Totals", "totals" => true, "dates" => @dates}) %></li>
+    <li><%= live_render(@socket, RonaWeb.StateChartLive, id: "state-daily", session: %{"state" => @state, "size" => "large", "title" => "New Per Day", "dates" => @dates}) %></li>
   </ul>
 </div>
 
@@ -22,7 +22,7 @@
 <div class="layout-breakout">
   <ul class="has-chart">
     <%= for county <- @counties do %>
-      <li><%= live_render(@conn, RonaWeb.CountyChartLive, session: %{"county" => county, "dates" => @dates, "max_value" => @max_value}) %></li>
+      <li><%= live_render(@socket, RonaWeb.CountyChartLive, id: county.fips, session: %{"county" => county, "dates" => @dates, "max_value" => @max_value}) %></li>
     <% end %>
   </ul>
 </div>

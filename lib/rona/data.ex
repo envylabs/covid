@@ -8,7 +8,7 @@ defmodule Rona.Data do
 
   def init(state) do
     :ets.new(:data_cache, [:set, :public, :named_table])
-    # schedule_work(:refresh_us_data, 5_000)
+    schedule_work(:refresh_us_data, 5_000)
     # schedule_work(:refresh_global_data, 30_000)
     {:ok, state}
   end
@@ -44,8 +44,13 @@ defmodule Rona.Data do
   end
 
   def handle_info(:refresh_us_data, state) do
+    next_day = Rona.Cases.list_dates(Rona.Cases.StateReport) |> List.last() |> Date.add(1)
+
     Logger.info("Updating US data...")
     load_usa(:ny_times)
+    load_usa(:johns_hopkins, next_day)
+    update_deltas(Rona.Cases.StateReport)
+    update_deltas(Rona.Cases.CountyReport)
     Logger.info("US data updated.")
 
     # 1 hour

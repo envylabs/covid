@@ -1,11 +1,11 @@
 const classes = ["chart-svg", "chart-large"];
 
-const width = [230, 400];
-const height = [160, 230];
+const width = [170, 400];
+const height = [160, 300];
 
 const margin = [
-  {top: 10, right: 0, bottom: 20, left: 40},
-  {top: 10, right: 0, bottom: 20, left: 60}
+  {top: 10, right: 0, bottom: 20, left: 0},
+  {top: 10, right: 0, bottom: 20, left: 0}
 ];
 
 const colors = [
@@ -15,12 +15,14 @@ const colors = [
 
 const xAxis = (g, obj) => {
   g.attr("transform", `translate(0,${height[obj.size] - margin[obj.size].bottom})`)
+    .attr('class', 'chart-xaxis')
     .call(d3.axisBottom(obj.x).tickFormat(d3.timeFormat("%b %d")).tickSizeOuter(0).tickValues([obj.date]));
 }
 
 const yAxis = (g, obj) => {
   g.attr("transform", `translate(${width[obj.size] + margin[obj.size].left},0)`)
-    .call(d3.axisLeft(obj.y).tickSize(width[obj.size]).tickValues([0, obj.max]))
+    .attr('class', 'chart-yaxis')
+    .call(d3.axisLeft(obj.y).tickSize(width[obj.size]).tickValues([0, obj.max]).tickPadding(0))
     .call(g => g.select(".domain").remove());
 }
 

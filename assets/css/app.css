@@ -52,7 +52,8 @@ h3 {
   font-size: 0.8706em;
   font-weight: bold;
   line-height: 1.2rem;
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.2rem;
+  text-align: center;
 }
 
 /* ----- Markup ----- */
@@ -79,20 +80,10 @@ time {
 
 /* ----- Media ----- */
 
-svg.map {
+svg {
   display: block;
   max-width: 100%;
   width: 100%;
-}
-
-svg.chart {
-  display: block;
-  width: 230px;
-}
-
-svg.chart-large {
-  display: block;
-  width: 400px;
 }
 
 /* *************************************
@@ -103,7 +94,7 @@ svg.chart-large {
   border: 1px solid #eee;
   display: block;
   grid-column-end: span 1;
-  padding: 1.2rem 1.2rem 0.6rem;
+  padding: 1rem 1.2rem 0.6rem;
 }
 a.chart {
   border-color: #bbb;
@@ -143,8 +134,17 @@ a.chart:focus {
 .chart .tick line {
   stroke: rgba(0, 0, 0, 0.2);
 }
-.chart .tick text {
+.chart-xaxis text {
   text-anchor: end;
+}
+.chart-yaxis text {
+  text-anchor: start;
+}
+.chart-yaxis g:first-child text {
+  transform: translateY(-0.6rem);
+}
+.chart-yaxis g:last-child text {
+  transform: translateY(0.6rem);
 }
 
 /* *************************************

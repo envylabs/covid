@@ -258,7 +258,7 @@ a.chart:focus {
 }
 @media (min-width: 60em) {
   .layout {
-    padding: 3.2rem;
+    padding: 4rem;
   }
 }
 
@@ -270,7 +270,7 @@ a.chart:focus {
 }
 
 .layout-breakout {
-  margin: 2rem 0 3.2rem;
+  margin: 2rem 0 4rem;
 }
 @media (min-width: 50em) {
   .layout-breakout {
@@ -283,6 +283,10 @@ a.chart:focus {
     margin-left: -10vw;
     margin-right: -10vw;
   }
+}
+.layout-breakout--map {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 4rem;
 }
 
 .layout-controls {
@@ -386,4 +390,23 @@ input[type=range]:focus::-ms-fill-lower {
 }
 input[type=range]:focus::-ms-fill-upper {
   background: rgb(164, 173, 219);
+}
+
+/* *************************************
+  Swatch
+************************************* */
+
+.swatch {
+  align-items: center;;
+  display: inline-flex;
+  font-size: 0.8706em;
+  margin: 0 0.2rem;
+}
+
+.swatch span {
+  display: inline-block;
+  border-radius: 0.2rem;
+  height: 0.8rem;
+  margin-right: 0.2rem;
+  width: 0.8rem;
 }

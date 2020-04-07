@@ -22,6 +22,6 @@
   </div>
 </div>
 
-<div class="layout-breakout">
+<div class="layout-breakout layout-breakout--map">
   <div id="map" phx-hook="USAMap" phx-update="ignore" data-mapdata="<%= @map_data %>" data-label="<%= label_for(@series) %>" data-percent="<%= if @population_scale, do: "true", else: "" %>" data-zoom="<%= @zoom %>"></div>
 </div>

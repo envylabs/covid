@@ -6,7 +6,10 @@
 <%= live_render(@socket, RonaWeb.USAMapLive, id: "map") %>
 
 <h2>Stats Per State</h2>
-<p>Text about clicking on one to see a larger map and per-county data.</p>
+<p>
+  Select a state to view a larger, localized map, per-county statistics, and cumulative data.
+  <span class="swatch"><span style="background: rgb(168, 194, 221)"></span>Cases</span>&nbsp;<span class="swatch"><span style="background: rgb(136, 68, 157)"></span>Deaths</span>
+</p>
 
 <div class="layout-breakout">
   <ul class="has-chart">

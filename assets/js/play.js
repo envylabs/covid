@@ -16,7 +16,7 @@ export default {
           window.clearInterval(this.interval);
           this.interval = null;
         }
-        this.el.textContent = "Play";
+        this.el.textContent = "Loop";
       }
     });
   },
@@ -25,7 +25,7 @@ export default {
     if (this.playing) {
       this.el.textContent = "Stop";
     } else {
-      this.el.textContent = "Play";
+      this.el.textContent = "Loop";
     }
   }
 }

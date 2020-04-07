@@ -16,7 +16,7 @@
   </form>
 
   <div class="layout-controls">
-    <button class="form-button" id="play" phx-hook="Play">Play</button>
+    <button class="form-button" id="play" phx-hook="Play">Loop</button>
     <input class="form-range" id="date-range" type="range" min="0" max="<%= @max_date_index %>" value="<%= @max_date_index %>" phx-hook="DateRange" data-dates="<%= @json_dates %>" />
     <span class="form-date" id="current-date"><%= List.last(@dates) %></span>
   </div>

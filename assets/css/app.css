@@ -89,15 +89,9 @@ time {
 /* ----- Media ----- */
 
 svg {
-  animation: svg 1000ms ease;
   display: block;
   max-width: 100%;
   width: 100%;
-}
-@keyframes svg {
-  from {
-    opacity: 0;
-  }
 }
 
 /* *************************************
@@ -281,8 +275,18 @@ a.chart:focus {
 /* ----- Subcomponents ----- */
 
 .layout-back {
+  background: rgba(240, 240, 240, 0.8);
+  left: 0;
+  padding: 0 0.8rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+.layout-back a {
   display: inline-block;
-  margin-bottom: 0.8rem;
+  font-size: 0.8706em;
+  font-weight: bold;
+  line-height: 2rem;
 }
 
 .layout-breakout {

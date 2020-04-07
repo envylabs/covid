@@ -1,4 +1,6 @@
-<a class="layout-back" href="/">&larr; Back to U.S.</a>
+<div class="layout-back">
+  <a href="/">&larr; Full U.S. Map</a>
+</div>
 <h1><%= @state.name %>: County Coronavirus Stats Over Time</h1>
 <time>Last Updated: <%= Timex.format!(@last_update, "{Mfull} {D}, {YYYY} at {h12}:{m} {AM} {Zabbr}") %></time>
 

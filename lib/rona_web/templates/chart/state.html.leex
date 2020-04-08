@@ -3,8 +3,8 @@
   <div id="chart-<%= @state.fips %>" phx-hook="AreaChart" phx-update="ignore" data-chartdata="<%= @chart_data %>" data-max="<%= @max_value %>" data-color-scheme=0></div>
   <div class="chart-footer">
     Total:
-    <span style="border-color: rgb(135, 160, 187);"><%= Number.Delimit.number_to_delimited(@total_cases, precision: 0) %></span>
+    <span style="border-color: rgb(135, 160, 187);" title="Cases"><%= Number.Delimit.number_to_delimited(@total_cases, precision: 0) %></span>
     &bull;
-    <span style="border-color: rgb(136, 68, 157);"><%= Number.Delimit.number_to_delimited(@total_deaths, precision: 0) %></span>
+    <span style="border-color: rgb(136, 68, 157);" title="Deaths"><%= Number.Delimit.number_to_delimited(@total_deaths, precision: 0) %></span>
   </div>
 <% end %>

@@ -20,11 +20,16 @@ defmodule RonaWeb.StateChartLive do
         end
       end
 
+    total_cases = Rona.Cases.max_confirmed(Rona.Cases.StateReport, state)
+    total_deaths = Rona.Cases.max_deceased(Rona.Cases.StateReport, state)
+
     socket =
       socket
       |> assign(:state, state)
       |> assign(:dates, dates)
       |> assign(:max_value, max_value)
+      |> assign(:total_cases, total_cases)
+      |> assign(:total_deaths, total_deaths)
       |> assign(:size, size)
       |> assign(:totals, totals)
       |> assign(:title, Map.get(session, "title", ""))

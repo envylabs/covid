@@ -21,7 +21,7 @@ defmodule RonaWeb.PageLive do
           Rona.Places.list_counties(state)
           |> Enum.filter(&(length(&1.reports) > 0))
           |> Enum.filter(&(&1.name != "Unassigned"))
-          |> Enum.sort_by(&confirmed_delta_for(&1.reports, last_date))
+          |> Enum.sort_by(&cumulative_cases(&1.reports, last_date))
           |> Enum.reverse()
 
         max_value = Rona.Cases.max_confirmed_delta(Rona.Cases.CountyReport, state.name)
@@ -33,7 +33,7 @@ defmodule RonaWeb.PageLive do
       else
         states =
           Rona.Places.list_states()
-          |> Enum.sort_by(&confirmed_delta_for(&1.reports, last_date))
+          |> Enum.sort_by(&cumulative_cases(&1.reports, last_date))
           |> Enum.reverse()
 
         max_value = Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport)
@@ -55,10 +55,10 @@ defmodule RonaWeb.PageLive do
     end
   end
 
-  defp confirmed_delta_for(reports, date) do
+  defp cumulative_cases(reports, date) do
     report = Enum.find(reports, &(&1.date == date))
 
-    if report, do: report.confirmed_delta, else: 0
+    if report, do: report.confirmed, else: 0
   end
 
   defp date_range() do

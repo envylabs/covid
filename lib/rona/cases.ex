@@ -186,6 +186,14 @@ defmodule Rona.Cases do
     |> Repo.one()
   end
 
+  def max_confirmed(CountyReport, county) do
+    CountyReport
+    |> select([r], max(r.confirmed))
+    |> join(:left, [r], c in assoc(r, :county))
+    |> where([r, c], c.fips == ^county.fips)
+    |> Repo.one()
+  end
+
   def max_confirmed(StateReport, state) do
     StateReport
     |> select([r], max(r.confirmed))
@@ -232,6 +240,22 @@ defmodule Rona.Cases do
     |> select([r], max(r.deceased))
     |> join(:left, [r], s in assoc(r, :state))
     |> where([r, s], s.fips != "")
+    |> Repo.one()
+  end
+
+  def max_deceased(CountyReport, county) do
+    CountyReport
+    |> select([r], max(r.deceased))
+    |> join(:left, [r], c in assoc(r, :county))
+    |> where([r, c], c.fips == ^county.fips)
+    |> Repo.one()
+  end
+
+  def max_deceased(StateReport, state) do
+    StateReport
+    |> select([r], max(r.deceased))
+    |> join(:left, [r], s in assoc(r, :state))
+    |> where([r, s], s.fips == ^state.fips)
     |> Repo.one()
   end
 end

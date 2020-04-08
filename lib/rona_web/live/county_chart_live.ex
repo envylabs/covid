@@ -2,11 +2,16 @@ defmodule RonaWeb.CountyChartLive do
   use Phoenix.LiveView
 
   def mount(_params, %{"county" => county, "dates" => dates, "max_value" => max_value}, socket) do
+    total_cases = Rona.Cases.max_confirmed(Rona.Cases.CountyReport, county)
+    total_deaths = Rona.Cases.max_deceased(Rona.Cases.CountyReport, county)
+
     socket =
       socket
       |> assign(:county, county)
       |> assign(:dates, dates)
       |> assign(:max_value, max_value)
+      |> assign(:total_cases, total_cases)
+      |> assign(:total_deaths, total_deaths)
 
     {:ok, fetch_chart_data(socket)}
   end

@@ -47,7 +47,8 @@ defmodule Rona.MixProject do
       {:csv, "~> 2.3"},
       {:phoenix_live_view, "~> 0.10.0"},
       {:floki, ">= 0.0.0", only: :test},
-      {:timex, "~> 3.5"}
+      {:timex, "~> 3.5"},
+      {:number, "~>1.0"}
     ]
   end
 

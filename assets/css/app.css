@@ -114,7 +114,8 @@ svg {
 ************************************* */
 
 .chart {
-  background: #f5f5f5;
+  /* background: #f5f5f5; */
+  border: 1px solid rgba(0, 0, 0, 0.1);
   display: block;
   grid-column-end: span 1;
   padding: 0.4rem;
@@ -122,7 +123,7 @@ svg {
 }
 a.chart {
   background: rgba(135, 160, 187, 0.08);
-  border: 1px solid transparent;
+  /* border: 1px solid transparent; */
   text-decoration: none;
 }
 a.chart .chart-footer {
@@ -205,7 +206,7 @@ a.chart:focus {
   display: none;
 }
 .chart .tick line {
-  stroke: rgba(0, 0, 0, 0.1);
+  stroke: #333;
 }
 .chart-xaxis text {
   text-anchor: end;
@@ -352,9 +353,11 @@ a.chart:focus {
 }
 .layout-back a {
   display: inline-block;
+  font-family: 'Roboto', sans-serif;
   font-size: 0.8706em;
   font-weight: bold;
   line-height: 2rem;
+  text-decoration: none;
 }
 
 .layout-breakout {

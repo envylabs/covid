@@ -1,7 +1,7 @@
 <div class="layout-back">
-  <a href="/">&larr; Full U.S. Map</a>
+  <a href="/">&lsaquo; Full U.S. Map</a>
 </div>
-<h1><%= @state.name %>: County Coronavirus Stats Over Time</h1>
+<h1><%= @state.name %>: County Coronavirus Stats Over&nbsp;Time</h1>
 <time>Last Updated: <%= Timex.format!(@last_update, "{Mfull} {D}, {YYYY} at {h12}:{m} {AM} {Zabbr}") %></time>
 
 <p>Pairing daily data from <a href="https://github.com/nytimes/covid-19-data">The New York Times</a> and <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>, the following visualizations track COVID-19 cases by <%= @state.name %> county. Each metric can be optionally scaled to population, limited to new instances, and animated over&nbsp;time.</p>

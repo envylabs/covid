@@ -73,6 +73,11 @@ h3 {
     margin: 0 0 0.8rem;
   }
 }
+@media (min-width: 80em) {
+  h3 {
+    font-size: 1em;
+  }
+}
 
 /* ----- Markup ----- */
 
@@ -89,7 +94,7 @@ p {
 }
 
 time {
-  color: #777;
+  color: #555;
   display: block;
   font-size: 0.7579em;
   line-height: 1.2rem;
@@ -113,9 +118,15 @@ svg {
   display: block;
   grid-column-end: span 1;
   padding: 0.4rem;
+  text-align: center;
 }
 a.chart {
-  border-radius: 0.15rem;
+  background: rgba(135, 160, 187, 0.08);
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+a.chart .chart-footer {
+  background: rgba(135, 160, 187, 0.1);
 }
 a.chart:hover,
 a.chart:focus {
@@ -171,6 +182,24 @@ a.chart:focus {
 }
 
 /* ----- Subcomponents ----- */
+
+.chart-footer {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.03);
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.6599em;
+  line-height: 1.2rem;
+  margin: 0.4rem -0.4rem -0.4rem;
+  padding: 0.2rem 0.4rem;
+}
+.chart-footer span {
+  border-bottom: 2px solid;
+}
+@media (min-width: 30em) {
+  .chart-footer {
+    margin: 0.4rem -0.8rem -0.8rem;
+  }
+}
 
 .chart .domain {
   display: none;
@@ -331,12 +360,6 @@ a.chart:focus {
 .layout-breakout {
   margin: 2rem 0 4rem;
 }
-@media (min-width: 50em) {
-  .layout-breakout {
-    margin-left: -4rem;
-    margin-right: -4rem;
-  }
-}
 @media (min-width: 60em) {
   .layout-breakout {
     margin-left: -10vw;
@@ -358,7 +381,7 @@ a.chart:focus {
 }
 
 .layout-footer p {
-  color: #777;
+  color: #555;
   font-size: 0.7579em;
   line-height: 1.2rem;
   margin: 1.6rem 0 0;
@@ -370,25 +393,23 @@ a.chart:focus {
 ************************************* */
 
 .swatch {
-  align-items: center;
-  display: inline-flex;
+  color: #555;
   font-size: 0.8706em;
   font-style: italic;
   margin-left: 0.4rem;
 }
 .swatch span {
   display: inline-block;
-  border-radius: 50%;
-  height: 0.8rem;
+  border-radius: 2px;
+  height: 0.6rem;
   margin-right: 0.2rem;
-  width: 0.8rem;
+  width: 0.6rem;
 }
 
 /* ----- Context ----- */
 
 .has-swatch {
   display: inline-block;
-  margin-top: 0.2rem;
   white-space: nowrap;
 }
 

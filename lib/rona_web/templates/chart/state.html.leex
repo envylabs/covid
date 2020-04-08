@@ -1,8 +1,10 @@
 <%= live_redirect(to: Routes.live_path(@socket, RonaWeb.PageLive, @state.fips), class: 'chart') do %>
   <h3><%= @state.name %></h3>
   <div id="chart-<%= @state.fips %>" phx-hook="AreaChart" phx-update="ignore" data-chartdata="<%= @chart_data %>" data-max="<%= @max_value %>" data-color-scheme=0></div>
-  <span class="has-swatch">
-    <span class="swatch"><span style="background: rgb(168, 194, 221)"></span><%= Number.Delimit.number_to_delimited(@total_cases, precision: 0) %></span>
-    <span class="swatch"><span style="background: rgb(136, 68, 157)"></span><%= Number.Delimit.number_to_delimited(@total_deaths, precision: 0) %></span>
-  </span>
+  <div class="chart-footer">
+    Total:
+    <span style="border-color: rgb(135, 160, 187);"><%= Number.Delimit.number_to_delimited(@total_cases, precision: 0) %></span>
+    &bull;
+    <span style="border-color: rgb(136, 68, 157);"><%= Number.Delimit.number_to_delimited(@total_deaths, precision: 0) %></span>
+  </div>
 <% end %>

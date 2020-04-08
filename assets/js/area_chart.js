@@ -26,7 +26,7 @@ const yAxis = (g, obj) => {
 }
 
 const prepareChart = (obj) => {
-  const data = JSON.parse(obj.el.dataset.chartdata).map(d => ({t: new Date(d.t), c: d.c, d: d.d}));
+  const data = JSON.parse(obj.el.dataset.chartdata).map(d => ({t: new Date(`${d.t}T12:00:00Z`), c: d.c, d: d.d}));
   obj.data = d3.stack().keys(["d", "c"])(data);
   obj.date = data[data.length - 1].t;
   obj.max = obj.el.dataset.max;

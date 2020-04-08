@@ -19,14 +19,13 @@
     <meta property="og:description" content="Pairing daily data from The New York Times and Johns Hopkins CSSE, the visualizations herein track COVID-19 cases by U.S. state and county." />
     <meta property="og:url" content="https://covid.envylabs.com/" />
     <meta property="og:site_name" content="Coronavirus Stats Over Time" />
-    <%# <meta property="og:image" content="https://envylabs.com/wp-content/uploads/2019/10/LinkImage_fb-linkedin.png" />
+    <meta property="og:image" content="<%= Routes.static_path(@conn, "/images/cover.png") %>" />
     <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" /> %>
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:description" content="Pairing daily data from The New York Times and Johns Hopkins CSSE, the visualizations herein track COVID-19 cases by U.S. state and county." />
     <meta name="twitter:title" content="U.S. State and County Coronavirus Stats Over Time" />
-    <%# <meta name="twitter:image" content="https://envylabs.com/wp-content/uploads/2019/10/LinkImage_twitter.png" /> %>
-    <%# 1024 x 520 %>
+    <meta name="twitter:image" content="<%= Routes.static_path(@conn, "/images/cover-twitter.png") %>" />
   </head>
   <body>
     <main role="main" class="layout">

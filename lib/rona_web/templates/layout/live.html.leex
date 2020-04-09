@@ -11,6 +11,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="<%= Routes.static_path(@conn, "/images/favicon-16.png") %>">
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <%= csrf_meta_tag() %>
+    <%= render RonaWeb.LayoutView, "_analytics.html" %>
 
     <meta name="description" content="Pairing daily data from The New York Times and Johns Hopkins CSSE, the visualizations herein track COVID-19 cases by U.S. state and county." />
     <meta property="og:locale" content="en_US" />

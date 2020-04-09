@@ -1,0 +1,33 @@
+<%= if System.get_env("GOOGLE_ANALYTICS_TAG") do %>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= System.get_env("GOOGLE_ANALYTICS_TAG") %>"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    history.pushState = ( f => function pushState(){
+      var ret = f.apply(this, arguments);
+      window.dispatchEvent(new Event('pushstate'));
+      window.dispatchEvent(new Event('locationchange'));
+      return ret;
+    })(history.pushState);
+
+    history.replaceState = ( f => function replaceState(){
+      var ret = f.apply(this, arguments);
+      window.dispatchEvent(new Event('replacestate'));
+      window.dispatchEvent(new Event('locationchange'));
+      return ret;
+    })(history.replaceState);
+
+    window.addEventListener('popstate',()=>{
+      window.dispatchEvent(new Event('locationchange'))
+    });
+
+    window.addEventListener('locationchange', function(){
+      gtag('config', '<%= System.get_env("GOOGLE_ANALYTICS_TAG") %>', {'page_location': window.location.href});
+    });
+
+    gtag('config', '<%= System.get_env("GOOGLE_ANALYTICS_TAG") %>');
+  </script>
+<% end %>

@@ -1,5 +1,5 @@
-// import * as d3 from "d3"
-import * as topojson from "topojson-client"
+import * as topojson from "topojson-client";
+import { initLegend, updateLegend } from "./legend";
 
 const viewboxes = {
   "00": [0, 0, 975, 610], // Entire US
@@ -57,13 +57,13 @@ const viewboxes = {
 }
 
 const colorSchemes = [
-	d3.schemeBuPu[9].slice(1),
-	d3.schemeBuGn[9].slice(1)
+  d3.schemeBuPu[9].slice(1),
+  d3.schemeBuGn[9].slice(1)
 ];
 
 const color = (obj, value) => {
   if (value == null) { return "#ffffff" }
-  return obj.x(Math.log10(value));
+  return obj.x(value);
 };
 
 const label = (obj, d, value) => {
@@ -75,6 +75,14 @@ const label = (obj, d, value) => {
   }
 
   return `${d.properties.name}, ${obj.states.get(d.id.slice(0, 2)).name}\n${value_str}`;
+};
+
+const legendTitle = (obj) => {
+  var title = obj.legendTitle;
+  if (obj.percent) {
+    title = `${title} per 100,000 People`
+  }
+  return title;
 };
 
 const path = d3.geoPath();
@@ -95,13 +103,14 @@ const getData = (obj, id) => {
 const prepareMap = (obj) => {
   obj.data = JSON.parse(obj.el.dataset.mapdata);
   obj.label = obj.el.dataset.label;
+  obj.legendTitle = obj.el.dataset.legendTitle;
   obj.percent = obj.el.dataset.percent;
   obj.zoom = obj.el.dataset.zoom;
 
   obj.maxValue = Object.values(obj.data).map(d => Object.values(d)).flat().reduce((a, b) => Math.max(a, b));
-	const colorScheme = d3.interpolateRgbBasis(colorSchemes[obj.zoom === "00" ? 0: 1]);
-  obj.x = d3.scaleSequential(colorScheme)
-    .domain([0, Math.log10(obj.maxValue)]);
+  obj.colorScheme = d3.interpolateRgbBasis(colorSchemes[obj.zoom === "00" ? 0: 1]);
+  obj.x = d3.scaleSequentialSymlog(obj.colorScheme)
+    .domain([0, obj.maxValue]);
 }
 
 export const initMap = (obj) => {
@@ -131,6 +140,13 @@ export const initMap = (obj) => {
       .attr("stroke", "white")
       .attr("stroke-linejoin", "round")
       .attr("d", path);
+
+    initLegend(obj.el, {
+      color: d3.scaleSequentialSymlog(obj.colorScheme).domain([0, obj.maxValue]).nice(),
+      title: legendTitle(obj),
+      tickValues: [0, Math.round(obj.maxValue / 100000) * 10, Math.round(obj.maxValue / 10000) * 10, Math.round(obj.maxValue / 1000) * 10, Math.round(obj.maxValue / 1000) * 100, Math.round(obj.maxValue / 100) * 100],
+      tickFormat: ",i"
+    });
   });
 };
 
@@ -138,7 +154,7 @@ export const updateMap = (obj) => {
   prepareMap(obj);
 
   const svg = d3.select(obj.el)
-    .select("svg")
+    .select("svg.map")
     .attr("viewBox", viewboxes[obj.zoom]);
 
   svg.select("g")
@@ -146,6 +162,13 @@ export const updateMap = (obj) => {
     .attr("fill", d => color(obj, getData(obj, d.id)))
     .select("title")
     .text(d => label(obj, d, getData(obj, d.id)));
+
+  updateLegend(obj.el, {
+    color: d3.scaleSequentialSymlog(obj.colorScheme).domain([0, obj.maxValue]).nice(),
+    title: legendTitle(obj),
+    tickValues: [0, Math.round(obj.maxValue / 100000) * 10, Math.round(obj.maxValue / 10000) * 10, Math.round(obj.maxValue / 1000) * 10, Math.round(obj.maxValue / 1000) * 100, Math.round(obj.maxValue / 100) * 100],
+    tickFormat: ",i"
+  });
 };
 
 export default {

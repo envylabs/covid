@@ -23,5 +23,5 @@
 </div>
 
 <div class="layout-breakout layout-breakout--map">
-  <div id="map" phx-hook="USAMap" phx-update="ignore" data-mapdata="<%= @map_data %>" data-label="<%= label_for(@series) %>" data-percent="<%= if @population_scale, do: "true", else: "" %>" data-zoom="<%= @zoom %>"></div>
+  <div id="map" phx-hook="USAMap" phx-update="ignore" data-mapdata="<%= @map_data %>" data-label="<%= label_for(@series) %>" data-legend-title="<%= legend_title_for(@series) %>" data-percent="<%= if @population_scale, do: "true", else: "" %>" data-zoom="<%= @zoom %>"></div>
 </div>

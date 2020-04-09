@@ -17,10 +17,10 @@
   </form>
 
   <div class="layout-controls">
-    <button class="form-button" id="play" phx-hook="Play">Loop</button>
+    <button class="form-button" id="play" phx-hook="Play" phx-update="ignore">Loop</button>
     <label class="srt" for="date-range">Select Date</label>
-    <input class="form-range" id="date-range" type="range" min="0" max="<%= @max_date_index %>" value="<%= @max_date_index %>" phx-hook="DateRange" data-dates="<%= @json_dates %>" />
-    <span class="form-date" id="current-date"><%= List.last(@dates) %></span>
+    <input class="form-range" id="date-range" type="range" min="0" max="<%= @max_date_index %>" value="<%= @max_date_index %>" phx-hook="DateRange" phx-update="ignore" data-dates="<%= @json_dates %>" />
+    <span class="form-date" id="current-date" phx-update="ignore"><%= List.last(@dates) %></span>
   </div>
 </div>
 

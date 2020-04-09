@@ -100,6 +100,36 @@ const getData = (obj, id) => {
   }
 }
 
+const generateTickValues = (maxValue) => {
+  if (maxValue > 1000) {
+    return [
+      0,
+      Math.round(maxValue / 100000) * 10,
+      Math.round(maxValue / 10000) * 10,
+      Math.round(maxValue / 1000) * 10,
+      Math.round(maxValue / 1000) * 100,
+      Math.round(maxValue / 100) * 100
+    ];
+  } else if (maxValue > 100) {
+    return [
+      0,
+      Math.round(maxValue / 160) * 10,
+      Math.round(maxValue / 80) * 10,
+      Math.round(maxValue / 40) * 10,
+      Math.round(maxValue / 20) * 10,
+      Math.round(maxValue / 100) * 100
+    ];
+  } else {
+    return [
+      0,
+      Math.round(maxValue / 8),
+      Math.round(maxValue / 4),
+      Math.round(maxValue / 2),
+      maxValue
+    ];
+  }
+}
+
 const prepareMap = (obj) => {
   obj.data = JSON.parse(obj.el.dataset.mapdata);
   obj.label = obj.el.dataset.label;
@@ -144,7 +174,7 @@ export const initMap = (obj) => {
     initLegend(obj.el, {
       color: d3.scaleSequentialSymlog(obj.colorScheme).domain([0, obj.maxValue]).nice(),
       title: legendTitle(obj),
-      tickValues: [0, Math.round(obj.maxValue / 100000) * 10, Math.round(obj.maxValue / 10000) * 10, Math.round(obj.maxValue / 1000) * 10, Math.round(obj.maxValue / 1000) * 100, Math.round(obj.maxValue / 100) * 100],
+      tickValues: generateTickValues(obj.maxValue),
       tickFormat: ",i"
     });
   });
@@ -166,7 +196,7 @@ export const updateMap = (obj) => {
   updateLegend(obj.el, {
     color: d3.scaleSequentialSymlog(obj.colorScheme).domain([0, obj.maxValue]).nice(),
     title: legendTitle(obj),
-    tickValues: [0, Math.round(obj.maxValue / 100000) * 10, Math.round(obj.maxValue / 10000) * 10, Math.round(obj.maxValue / 1000) * 10, Math.round(obj.maxValue / 1000) * 100, Math.round(obj.maxValue / 100) * 100],
+    tickValues: generateTickValues(obj.maxValue),
     tickFormat: ",i"
   });
 };

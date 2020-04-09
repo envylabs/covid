@@ -152,6 +152,13 @@ defmodule Rona.Places do
     |> Repo.one()
   end
 
+  def get_county(fips) do
+    County
+    |> where([s], s.fips == ^fips)
+    |> preload(:reports)
+    |> Repo.one()
+  end
+
   def update_state(%State{} = state, attrs) do
     state
     |> State.changeset(attrs)

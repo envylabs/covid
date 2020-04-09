@@ -1,7 +1,13 @@
 defmodule RonaWeb.StateChartLive do
   use Phoenix.LiveView
 
-  def mount(_params, %{"state" => state, "dates" => dates} = session, socket) do
+  def mount(
+        _params,
+        %{"state" => fips, "start_date" => start_date, "end_date" => end_date} = session,
+        socket
+      ) do
+    state = Rona.Places.get_state(fips)
+    dates = Date.range(Date.from_iso8601!(start_date), Date.from_iso8601!(end_date))
     size = Map.get(session, "size", "small")
     totals = Map.get(session, "totals", false)
 
@@ -42,7 +48,7 @@ defmodule RonaWeb.StateChartLive do
     cache_key = "chart-#{socket.assigns.state.fips}-#{socket.assigns.totals}"
 
     data =
-      Rona.Data.cache(cache_key, List.last(socket.assigns.dates), fn ->
+      Rona.Data.cache(cache_key, socket.assigns.dates.last, fn ->
         %{
           chart_data: build_data(socket.assigns),
           total_cases: Rona.Cases.max_confirmed(Rona.Cases.StateReport, socket.assigns.state),

@@ -19,8 +19,8 @@
 
 <div class="layout-breakout">
   <ul class="has-chart has-chart--2">
-    <li><%= live_render(@socket, RonaWeb.StateChartLive, id: "state-totals", session: %{"state" => @state, "size" => "large", "title" => "Cumulative Totals", "totals" => true, "dates" => @dates}) %></li>
-    <li><%= live_render(@socket, RonaWeb.StateChartLive, id: "state-daily", session: %{"state" => @state, "size" => "large", "title" => "New Per Day", "dates" => @dates}) %></li>
+    <li><%= live_render(@socket, RonaWeb.StateChartLive, id: "state-totals", session: %{"state" => "#{@state.fips}", "size" => "large", "title" => "Cumulative Totals", "totals" => true, "start_date" => "#{@start_date}", "end_date" => "#{@end_date}"}) %></li>
+    <li><%= live_render(@socket, RonaWeb.StateChartLive, id: "state-daily", session: %{"state" => "#{@state.fips}", "size" => "large", "title" => "New Per Day", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}"}) %></li>
   </ul>
 </div>
 
@@ -36,7 +36,7 @@
 <div class="layout-breakout">
   <ul class="has-chart">
     <%= for county <- @counties do %>
-      <li><%= live_render(@socket, RonaWeb.CountyChartLive, id: county.fips, session: %{"county" => county, "dates" => @dates, "max_value" => @max_value}) %></li>
+      <li><%= live_render(@socket, RonaWeb.CountyChartLive, id: county.fips, session: %{"county" => "#{county.fips}", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "max_value" => @max_value}) %></li>
     <% end %>
   </ul>
 </div>

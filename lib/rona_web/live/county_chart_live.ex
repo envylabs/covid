@@ -1,7 +1,19 @@
 defmodule RonaWeb.CountyChartLive do
   use Phoenix.LiveView
 
-  def mount(_params, %{"county" => county, "dates" => dates, "max_value" => max_value}, socket) do
+  def mount(
+        _params,
+        %{
+          "county" => fips,
+          "start_date" => start_date,
+          "end_date" => end_date,
+          "max_value" => max_value
+        },
+        socket
+      ) do
+    county = Rona.Places.get_county(fips)
+    dates = Date.range(Date.from_iso8601!(start_date), Date.from_iso8601!(end_date))
+
     socket =
       socket
       |> assign(:county, county)
@@ -19,7 +31,7 @@ defmodule RonaWeb.CountyChartLive do
     cache_key = "chart-#{socket.assigns.county.fips}"
 
     data =
-      Rona.Data.cache(cache_key, List.last(socket.assigns.dates), fn ->
+      Rona.Data.cache(cache_key, socket.assigns.dates.last, fn ->
         %{
           chart_data: build_data(socket.assigns),
           total_cases: Rona.Cases.max_confirmed(Rona.Cases.CountyReport, socket.assigns.county),

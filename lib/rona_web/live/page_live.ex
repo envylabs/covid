@@ -2,10 +2,14 @@ defmodule RonaWeb.PageLive do
   use Phoenix.LiveView
 
   def mount(_params, _session, socket) do
+    date_range = date_range()
+
     socket =
       socket
       |> assign(:last_update, last_update())
-      |> assign(:dates, date_range())
+      |> assign(:dates, date_range)
+      |> assign(:start_date, List.first(date_range))
+      |> assign(:end_date, List.last(date_range))
 
     {:ok, socket}
   end
@@ -66,6 +70,7 @@ defmodule RonaWeb.PageLive do
 
     Rona.Cases.list_dates(Rona.Cases.CountyReport)
     |> Enum.filter(&(Date.compare(&1, end_of_feb) == :gt))
+    |> Enum.to_list()
   end
 
   defp last_update() do

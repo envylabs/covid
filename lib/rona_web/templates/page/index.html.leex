@@ -17,7 +17,7 @@
 <div class="layout-breakout">
   <ul class="has-chart">
     <%= for state <- @states do %>
-      <li><%= live_render(@socket, RonaWeb.StateChartLive, id: state.fips, session: %{"state" => state, "dates" => @dates, "max_value" => @max_value}) %></li>
+      <li><%= live_render(@socket, RonaWeb.StateChartLive, id: state.fips, session: %{"state" => "#{state.fips}", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "max_value" => @max_value}) %></li>
     <% end %>
   </ul>
 </div>

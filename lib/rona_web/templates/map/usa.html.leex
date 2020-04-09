@@ -4,9 +4,9 @@
       <label class="srt" for="form-series">Select View</label>
       <select name="series" id="form-series">
         <option value="confirmed" <%= if @series == :confirmed, do: "selected", else: "" %>>Total Cases</option>
-        <option value="confirmed_delta" <%= if @series == :confirmed_delta, do: "selected", else: "" %>>New Cases</option>
+        <option value="confirmed_delta" <%= if @series == :confirmed_delta, do: "selected", else: "" %>>Daily Cases</option>
         <option value="deceased" <%= if @series == :deceased, do: "selected", else: "" %>>Total Deaths</option>
-        <option value="deceased_delta" <%= if @series == :deceased_delta, do: "selected", else: "" %>>New Deaths</option>
+        <option value="deceased_delta" <%= if @series == :deceased_delta, do: "selected", else: "" %>>Daily Deaths</option>
       </select>
     </div>
 

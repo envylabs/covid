@@ -20,16 +20,11 @@ defmodule RonaWeb.StateChartLive do
         end
       end
 
-    total_cases = Rona.Cases.max_confirmed(Rona.Cases.StateReport, state)
-    total_deaths = Rona.Cases.max_deceased(Rona.Cases.StateReport, state)
-
     socket =
       socket
       |> assign(:state, state)
       |> assign(:dates, dates)
       |> assign(:max_value, max_value)
-      |> assign(:total_cases, total_cases)
-      |> assign(:total_deaths, total_deaths)
       |> assign(:size, size)
       |> assign(:totals, totals)
       |> assign(:title, Map.get(session, "title", ""))
@@ -48,32 +43,38 @@ defmodule RonaWeb.StateChartLive do
 
     data =
       Rona.Data.cache(cache_key, List.last(socket.assigns.dates), fn ->
-        socket.assigns.dates
-        |> Enum.map(fn date ->
-          report = Enum.find(socket.assigns.state.reports, &(&1.date == date))
-
-          if report do
-            if socket.assigns.totals do
-              %{
-                t: date,
-                c: report.confirmed - report.deceased,
-                d: report.deceased
-              }
-            else
-              %{
-                t: date,
-                c: report.confirmed_delta - report.deceased_delta,
-                d: report.deceased_delta
-              }
-            end
-          else
-            %{t: date, c: 0, d: 0}
-          end
-        end)
-        |> Jason.encode!()
+        %{
+          chart_data: build_data(socket.assigns),
+          total_cases: Rona.Cases.max_confirmed(Rona.Cases.StateReport, socket.assigns.state),
+          total_deaths: Rona.Cases.max_deceased(Rona.Cases.StateReport, socket.assigns.state)
+        }
       end)
 
-    socket
-    |> assign(:chart_data, data)
+    assign(socket, data)
+  end
+
+  defp build_data(%{dates: dates, state: state, totals: totals}) do
+    Enum.map(dates, fn date ->
+      report = Enum.find(state.reports, &(&1.date == date))
+
+      if report do
+        if totals do
+          %{
+            t: date,
+            c: report.confirmed - report.deceased,
+            d: report.deceased
+          }
+        else
+          %{
+            t: date,
+            c: report.confirmed_delta - report.deceased_delta,
+            d: report.deceased_delta
+          }
+        end
+      else
+        %{t: date, c: 0, d: 0}
+      end
+    end)
+    |> Jason.encode!()
   end
 end

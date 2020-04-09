@@ -1,7 +1,8 @@
 <div class="form" id="controls">
   <form class="layout-controls" phx-change="update_settings">
     <div class="form-select">
-      <select name="series">
+      <label class="srt" for="form-series">Select View</label>
+      <select name="series" id="form-series">
         <option value="confirmed" <%= if @series == :confirmed, do: "selected", else: "" %>>Total Cases</option>
         <option value="confirmed_delta" <%= if @series == :confirmed_delta, do: "selected", else: "" %>>New Cases</option>
         <option value="deceased" <%= if @series == :deceased, do: "selected", else: "" %>>Total Deaths</option>
@@ -17,6 +18,7 @@
 
   <div class="layout-controls">
     <button class="form-button" id="play" phx-hook="Play">Loop</button>
+    <label class="srt" for="date-range">Select Date</label>
     <input class="form-range" id="date-range" type="range" min="0" max="<%= @max_date_index %>" value="<%= @max_date_index %>" phx-hook="DateRange" data-dates="<%= @json_dates %>" />
     <span class="form-date" id="current-date"><%= List.last(@dates) %></span>
   </div>

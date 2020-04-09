@@ -101,6 +101,18 @@ time {
   margin-bottom: 1.6rem;
 }
 
+.srt {
+  border: 0 !important;
+  clip: rect(0, 0, 0, 0) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  white-space: nowrap !important;
+  width: 1px !important;
+}
+
 /* ----- Media ----- */
 
 svg {
@@ -114,7 +126,6 @@ svg {
 ************************************* */
 
 .chart {
-  /* background: #f5f5f5; */
   border: 1px solid rgba(0, 0, 0, 0.1);
   display: block;
   grid-column-end: span 1;
@@ -123,7 +134,6 @@ svg {
 }
 a.chart {
   background: rgba(135, 160, 187, 0.08);
-  /* border: 1px solid transparent; */
   text-decoration: none;
 }
 a.chart .chart-footer {

@@ -13,8 +13,8 @@ function ramp(color, n = 256) {
 export function initLegend(el, {
   color,
   title,
-  tickSize = 6,
-  width = 320,
+  tickSize = 4,
+  width = 240,
   height = 44 + tickSize,
   marginTop = 18,
   marginRight = 0,

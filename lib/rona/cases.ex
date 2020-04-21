@@ -96,6 +96,53 @@ defmodule Rona.Cases do
     end
   end
 
+  def file_report(
+        %Rona.Places.State{} = state,
+        date,
+        tested,
+        testing_rate,
+        confirmed,
+        positive_rate,
+        hospitalized,
+        hospitalization_rate,
+        deceased,
+        death_rate
+      ) do
+    report =
+      StateReport
+      |> where([r], r.state_id == ^state.id and r.date == ^date)
+      |> Repo.one()
+
+    if report do
+      report
+      |> StateReport.changeset(%{
+        tested: tested,
+        testing_rate: testing_rate,
+        confirmed: confirmed,
+        positive_rate: positive_rate,
+        hospitalized: hospitalized,
+        hospitalization_rate: hospitalization_rate,
+        deceased: deceased,
+        death_rate: death_rate
+      })
+      |> Repo.update!()
+    else
+      state
+      |> Ecto.build_assoc(:reports, %{
+        date: date,
+        tested: tested,
+        testing_rate: testing_rate,
+        confirmed: confirmed,
+        positive_rate: positive_rate,
+        hospitalized: hospitalized,
+        hospitalization_rate: hospitalization_rate,
+        deceased: deceased,
+        death_rate: death_rate
+      })
+      |> Repo.insert!()
+    end
+  end
+
   def update_report(%Report{} = report, attrs) do
     report
     |> Report.changeset(attrs)

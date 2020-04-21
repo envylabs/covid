@@ -166,6 +166,37 @@ defmodule Rona.Data do
   end
 
   def load_usa(:johns_hopkins, date \\ Date.utc_today()) do
+    load_johns_hopkins_county_report(date)
+    load_johns_hopkins_state_report(date)
+  end
+
+  def update_deltas(report_type) do
+    Rona.Cases.list_dates(report_type)
+    |> Enum.reduce([], fn date, prev_reports ->
+      reports = Rona.Cases.for_date(report_type, date)
+
+      Enum.each(reports, fn report ->
+        prev_report = find_matching_report(prev_reports, report)
+        update_deltas(report_type, report, prev_report)
+      end)
+
+      reports
+    end)
+  end
+
+  defp find_matching_report(list, %Rona.Cases.Report{location_id: id}) do
+    Enum.find(list, &(&1.location_id == id))
+  end
+
+  defp find_matching_report(list, %Rona.Cases.StateReport{state_id: id}) do
+    Enum.find(list, &(&1.state_id == id))
+  end
+
+  defp find_matching_report(list, %Rona.Cases.CountyReport{county_id: id}) do
+    Enum.find(list, &(&1.county_id == id))
+  end
+
+  defp load_johns_hopkins_county_report(date) do
     url =
       "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports"
 
@@ -200,39 +231,73 @@ defmodule Rona.Data do
     end)
   end
 
-  def update_deltas(report_type) do
-    Rona.Cases.list_dates(report_type)
-    |> Enum.reduce([], fn date, prev_reports ->
-      reports = Rona.Cases.for_date(report_type, date)
+  defp load_johns_hopkins_state_report(date) do
+    url =
+      "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us"
 
-      Enum.each(reports, fn report ->
-        prev_report = find_matching_report(prev_reports, report)
+    [year, month, day] = date |> Date.to_string() |> String.split("-")
+    file = "#{month}-#{day}-#{year}.csv"
 
-        {confirmed, deceased} =
-          if prev_report,
-            do: {prev_report.confirmed, prev_report.deceased},
-            else: {0, 0}
+    parse_csv("#{url}/#{file}")
+    |> Enum.each(fn row ->
+      fips = row["FIPS"]
+      state = row["Province_State"]
 
-        Rona.Cases.update_report(report, %{
-          confirmed_delta: report.confirmed - confirmed,
-          deceased_delta: report.deceased - deceased
-        })
-      end)
+      tested =
+        if row["People_Tested"] && String.length(row["People_Tested"]) > 0,
+          do: String.to_integer(row["People_Tested"]),
+          else: 0
 
-      reports
+      testing_rate =
+        if row["Testing_Rate"] && String.length(row["Testing_Rate"]) > 0,
+          do: String.to_float(row["Testing_Rate"]) / 1000,
+          else: 0.0
+
+      cases =
+        if row["Confirmed"] && String.length(row["Confirmed"]) > 0,
+          do: String.to_integer(row["Confirmed"]),
+          else: 0
+
+      positive_rate =
+        if tested > 0,
+          do: cases / tested * 100,
+          else: 0.0
+
+      hospitalized =
+        if row["People_Hospitalized"] && String.length(row["People_Hospitalized"]) > 0,
+          do: String.to_integer(row["People_Hospitalized"]),
+          else: 0
+
+      hospitalization_rate =
+        if cases > 0,
+          do: hospitalized / cases * 100,
+          else: 0.0
+
+      deaths =
+        if row["Deaths"] && String.length(row["Deaths"]) > 0,
+          do: String.to_integer(row["Deaths"]),
+          else: 0
+
+      death_rate =
+        if cases > 0,
+          do: deaths / cases * 100,
+          else: 0.0
+
+      if fips && String.length(fips) > 0 do
+        Rona.Places.find_state(fips, state)
+        |> Rona.Cases.file_report(
+          date,
+          tested,
+          testing_rate,
+          cases,
+          positive_rate,
+          hospitalized,
+          hospitalization_rate,
+          deaths,
+          death_rate
+        )
+      end
     end)
-  end
-
-  defp find_matching_report(list, %Rona.Cases.Report{location_id: id}) do
-    Enum.find(list, &(&1.location_id == id))
-  end
-
-  defp find_matching_report(list, %Rona.Cases.StateReport{state_id: id}) do
-    Enum.find(list, &(&1.state_id == id))
-  end
-
-  defp find_matching_report(list, %Rona.Cases.CountyReport{county_id: id}) do
-    Enum.find(list, &(&1.county_id == id))
   end
 
   defp parse_csv(url, encoding \\ :utf8) do
@@ -247,5 +312,33 @@ defmodule Rona.Data do
 
   defp schedule_work(event, delay) do
     Process.send_after(self(), event, delay)
+  end
+
+  defp update_deltas(Rona.Cases.StateReport, report, prev_report) do
+    {tested, confirmed, hospitalized, deceased} =
+      if prev_report,
+        do:
+          {prev_report.tested, prev_report.confirmed, prev_report.hospitalized,
+           prev_report.deceased},
+        else: {0, 0, 0, 0}
+
+    Rona.Cases.update_report(report, %{
+      tested_delta: report.tested - tested,
+      confirmed_delta: report.confirmed - confirmed,
+      hospitalized_delta: report.hospitalized - hospitalized,
+      deceased_delta: report.deceased - deceased
+    })
+  end
+
+  defp update_deltas(_, report, prev_report) do
+    {confirmed, deceased} =
+      if prev_report,
+        do: {prev_report.confirmed, prev_report.deceased},
+        else: {0, 0}
+
+    Rona.Cases.update_report(report, %{
+      confirmed_delta: report.confirmed - confirmed,
+      deceased_delta: report.deceased - deceased
+    })
   end
 end

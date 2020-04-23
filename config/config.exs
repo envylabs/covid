@@ -15,7 +15,7 @@ config :rona, RonaWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "cwN4w6zKQbsP/lWTgJA9cRbm7qepf0exoBxTlMWDVlMjUZniuMscDzU65hPDFNUs",
   render_errors: [view: RonaWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Rona.PubSub, adapter: Phoenix.PubSub.PG2],
+  pubsub_server: Rona.PubSub,
   live_view: [signing_salt: "sn44O/gmrInwwlSXfxu24tBnlbHcQ5J3"]
 
 # Configures Elixir's Logger

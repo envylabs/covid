@@ -8,12 +8,10 @@ defmodule Rona.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      # Start the Ecto repository
       Rona.Repo,
-      # Start the endpoint when the application starts
+      {Phoenix.PubSub, name: Rona.PubSub},
       RonaWeb.Endpoint,
-      # Starts a worker by calling: Rona.Worker.start_link(arg)
-      # {Rona.Worker, arg},
+      RonaWeb.Telemetry,
       Rona.Data
     ]
 

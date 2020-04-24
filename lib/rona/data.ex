@@ -8,7 +8,7 @@ defmodule Rona.Data do
 
   def init(state) do
     :ets.new(:data_cache, [:set, :public, :named_table])
-    # schedule_work(:refresh_us_data, 5_000)
+    schedule_work(:refresh_us_data, 5_000)
     # schedule_work(:refresh_global_data, 30_000)
     {:ok, state}
   end

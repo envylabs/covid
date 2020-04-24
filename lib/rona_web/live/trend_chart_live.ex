@@ -51,9 +51,13 @@ defmodule RonaWeb.TrendChartLive do
 
         {c, d, p} =
           if report do
-            {Map.get(report, String.to_atom(field)),
-             Map.get(report, String.to_atom("#{field}_delta")),
-             Map.get(report, String.to_atom(percent_field))}
+            c = Map.get(report, String.to_atom(field))
+            d = Map.get(report, String.to_atom("#{field}_delta"))
+            p = Map.get(report, String.to_atom(percent_field))
+
+            d = if acc.max_value == 0, do: 0, else: d
+
+            {c, d, p}
           else
             {0, 0, 0.0}
           end

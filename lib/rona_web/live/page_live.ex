@@ -27,6 +27,7 @@ defmodule RonaWeb.PageLive do
           |> Enum.filter(&(&1.name != "Unassigned"))
           |> Enum.sort_by(&cumulative_cases(&1.reports, last_date))
           |> Enum.reverse()
+          |> Enum.take(8)
 
         max_value = Rona.Cases.max_confirmed_delta(Rona.Cases.CountyReport, state.name)
 

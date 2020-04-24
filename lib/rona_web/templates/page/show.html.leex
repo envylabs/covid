@@ -11,22 +11,22 @@
 <h2>Statewide Totals</h2>
 <p>
   Cumulative and daily&nbsp;totals.
-  <span class="has-swatch">
-    <span class="swatch"><span style="background: rgb(137, 209, 188)"></span>Cases</span>
-    <span class="swatch"><span style="background: rgb(0, 69, 27)"></span>Deaths</span>
-  </span>
 </p>
 
 <div class="layout-breakout">
   <ul class="has-chart has-chart--2">
-    <li><%= live_render(@socket, RonaWeb.StateChartLive, id: "state-totals", session: %{"state" => "#{@state.fips}", "size" => "large", "title" => "Cumulative Totals", "totals" => true, "start_date" => "#{@start_date}", "end_date" => "#{@end_date}"}) %></li>
-    <li><%= live_render(@socket, RonaWeb.StateChartLive, id: "state-daily", session: %{"state" => "#{@state.fips}", "size" => "large", "title" => "New Per Day", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}"}) %></li>
+    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "testing", session: %{"state" => "#{@state.fips}", "title" => "Testing", "field" => "tested", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "testing_rate", "percent_label" => "of state population"}) %></li>
+    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "confirmed", session: %{"state" => "#{@state.fips}", "title" => "Confirmed Cases", "field" => "confirmed", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "positive_rate", "percent_label" => "of people tested"}) %></li>
+  </ul>
+  <ul class="has-chart has-chart--2">
+    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "hospitalizations", session: %{"state" => "#{@state.fips}", "title" => "Hospitalizations", "field" => "hospitalized", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "hospitalization_rate", "percent_label" => "of confirmed cases"}) %></li>
+    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "deaths", session: %{"state" => "#{@state.fips}", "title" => "Deaths", "field" => "deceased", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "death_rate", "percent_label" => "of confirmed cases"}) %></li>
   </ul>
 </div>
 
 <h2>Stats Per County</h2>
 <p>
-  Daily totals for each&nbsp;county.
+  Daily totals for counties with the most&nbsp;cases.
   <span class="has-swatch">
     <span class="swatch"><span style="background: rgb(137, 209, 188)"></span>Cases</span>
     <span class="swatch"><span style="background: rgb(0, 69, 27)"></span>Deaths</span>

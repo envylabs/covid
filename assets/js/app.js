@@ -20,6 +20,12 @@ import DateRange from "./date_range"
 import Play from "./play"
 import USAMap from "./usa_map"
 
+import NProgress from "nprogress"
+
+// Show progress bar on live navigation and form submits
+window.addEventListener("phx:page-loading-start", info => NProgress.start())
+window.addEventListener("phx:page-loading-stop", info => NProgress.done())
+
 window.rona = {
 	dates: [],
 	date: null,

@@ -4830,6 +4830,11 @@ npm-run-path@^2.0.0:
   dependencies:
     path-key "^2.0.0"
 
+nprogress@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/nprogress/-/nprogress-0.2.0.tgz#cb8f34c53213d895723fcbab907e9422adbcafb1"
+  integrity sha1-y480xTIT2JVyP8urkH6UIq28r7E=
+
 num2fraction@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/num2fraction/-/num2fraction-1.2.2.tgz#6f682b6a027a4e9ddfa4564cd2589d1d4e669ede"
@@ -5156,13 +5161,13 @@ pbkdf2@^3.0.3:
     sha.js "^2.4.8"
 
 "phoenix@file:../deps/phoenix":
-  version "1.4.16"
+  version "1.5.1"
 
 "phoenix_html@file:../deps/phoenix_html":
   version "2.14.1"
 
 "phoenix_live_view@file:../deps/phoenix_live_view":
-  version "0.10.0"
+  version "0.12.1"
 
 pify@^2.3.0:
   version "2.3.0"

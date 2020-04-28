@@ -1,9 +1,9 @@
-<div class="chart">
-  <h3><%= @title %></h3>
-  <div class="chart-left">
+<div class="chart chart--expanded">
+  <div class="chart-figures">
+    <h3><%= @title %></h3>
     <div id="chart-<%= @state.fips %>-<%= @field %>" phx-hook="AreaBarChart" phx-update="ignore" data-chartdata="<%= @chart_data %>" data-max="<%= @max_value %>"></div>
   </div>
-  <div class="chart-right">
+  <div class="chart-content">
     <span><%= @percent_value |> Float.round(1) |> Float.to_string %>%</span>
     <%= @percent_label %>
   </div>

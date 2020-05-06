@@ -67,10 +67,10 @@ defmodule RonaWeb.PageLive do
   end
 
   defp date_range() do
-    end_of_feb = Date.from_iso8601!("2020-02-29")
-
     Rona.Cases.list_dates(Rona.Cases.CountyReport)
-    |> Enum.filter(&(Date.compare(&1, end_of_feb) == :gt))
+    |> Enum.reverse()
+    |> Enum.take(30)
+    |> Enum.reverse()
     |> Enum.to_list()
   end
 

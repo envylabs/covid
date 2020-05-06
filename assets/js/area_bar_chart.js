@@ -1,7 +1,7 @@
 const width = 270;
 const height = 230;
 const margin = {top: 0, right: 0, bottom: 20, left: 0};
-const colors = ["rgb(137, 209, 188)", "rgb(0, 69, 27)"];
+const colors = ["rgb(0, 69, 27)", "rgb(137, 209, 188)"];
 
 const formatComma = d3.format(",");
 
@@ -71,7 +71,7 @@ export const initChart = (obj) => {
     .enter().append("rect")
     .style("fill", colors[1])
     .attr("x", d => obj.x(d.t))
-    .attr("width", 3)
+    .attr("width", "3%")
     .attr("y", d => obj.y2(d.d))
     .attr("height", d => height - margin.bottom - obj.y2(d.d));
 

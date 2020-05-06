@@ -2,11 +2,11 @@ defmodule RonaWeb.USAMapLive do
   use Phoenix.LiveView
 
   def mount(_params, session, socket) do
-    end_of_feb = Date.from_iso8601!("2020-02-29")
-
     dates =
       Rona.Cases.list_dates(Rona.Cases.CountyReport)
-      |> Enum.filter(&(Date.compare(&1, end_of_feb) == :gt))
+      |> Enum.reverse()
+      |> Enum.take(30)
+      |> Enum.reverse()
 
     socket =
       socket

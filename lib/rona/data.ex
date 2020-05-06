@@ -9,7 +9,6 @@ defmodule Rona.Data do
   def init(state) do
     :ets.new(:data_cache, [:set, :public, :named_table])
     schedule_work(:refresh_us_data, 5_000)
-    # schedule_work(:refresh_global_data, 30_000)
     {:ok, state}
   end
 
@@ -37,16 +36,6 @@ defmodule Rona.Data do
     :ets.delete_all_objects(:data_cache)
   end
 
-  def handle_info(:refresh_global_data, state) do
-    Logger.info("Updating global data...")
-    load_global()
-    Logger.info("Global data updated.")
-
-    # 1 hour
-    schedule_work(:refresh_global_data, 3_600_000)
-    {:noreply, state}
-  end
-
   def handle_info(:refresh_us_data, state) do
     next_day = Rona.Cases.list_dates(Rona.Cases.StateReport) |> List.last() |> Date.add(1)
 
@@ -69,37 +58,6 @@ defmodule Rona.Data do
     update_deltas(Rona.Cases.StateReport)
     update_deltas(Rona.Cases.CountyReport)
     clear_cache()
-  end
-
-  def load_global do
-    parse_csv(
-      "https://raw.githubusercontent.com/datasets/covid-19/master/data/time-series-19-covid-combined.csv"
-    )
-    |> Enum.each(fn row ->
-      country = row["Country/Region"]
-      state = row["Province/State"] || ""
-      {lat, _} = Float.parse(row["Lat"])
-      {long, _} = Float.parse(row["Long"])
-      date = Date.from_iso8601!(row["Date"])
-
-      confirmed =
-        if row["Confirmed"] && String.length(row["Confirmed"]) > 0,
-          do: String.to_integer(row["Confirmed"]),
-          else: 0
-
-      recovered =
-        if row["Recovered"] && String.length(row["Recovered"]) > 0,
-          do: String.to_integer(row["Recovered"]),
-          else: 0
-
-      deaths =
-        if row["Deaths"] && String.length(row["Deaths"]) > 0,
-          do: String.to_integer(row["Deaths"]),
-          else: 0
-
-      Rona.Places.find_location(country, state, lat, long)
-      |> Rona.Cases.file_report(date, confirmed, recovered, deaths)
-    end)
   end
 
   def load_usa(:census) do
@@ -182,10 +140,6 @@ defmodule Rona.Data do
 
       reports
     end)
-  end
-
-  defp find_matching_report(list, %Rona.Cases.Report{location_id: id}) do
-    Enum.find(list, &(&1.location_id == id))
   end
 
   defp find_matching_report(list, %Rona.Cases.StateReport{state_id: id}) do

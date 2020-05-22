@@ -10,6 +10,8 @@ defmodule Rona.Cases do
   alias Rona.Cases.CountyReport
 
   def file_report(%Rona.Places.State{} = state, date, confirmed, deceased) do
+    remove_duplicate_report(state, date)
+
     report =
       StateReport
       |> where([r], r.state_id == ^state.id and r.date == ^date)
@@ -34,6 +36,8 @@ defmodule Rona.Cases do
   end
 
   def file_report(%Rona.Places.County{} = county, date, confirmed, deceased) do
+    remove_duplicate_report(county, date)
+
     report =
       CountyReport
       |> where([r], r.county_id == ^county.id and r.date == ^date)
@@ -69,6 +73,8 @@ defmodule Rona.Cases do
         deceased,
         death_rate
       ) do
+    remove_duplicate_report(state, date)
+
     report =
       StateReport
       |> where([r], r.state_id == ^state.id and r.date == ^date)
@@ -114,6 +120,36 @@ defmodule Rona.Cases do
     report
     |> CountyReport.changeset(attrs)
     |> Repo.update()
+  end
+
+  def remove_duplicate_report(%Rona.Places.County{} = county, date) do
+    reports =
+      CountyReport
+      |> where([r], r.county_id == ^county.id and r.date == ^date)
+      |> Repo.all()
+
+    if length(reports) > 1 do
+      [_ | rest] = reports
+
+      Enum.each(rest, fn report ->
+        Repo.delete(report)
+      end)
+    end
+  end
+
+  def remove_duplicate_report(%Rona.Places.State{} = state, date) do
+    reports =
+      StateReport
+      |> where([r], r.state_id == ^state.id and r.date == ^date)
+      |> Repo.all()
+
+    if length(reports) > 1 do
+      [_ | rest] = reports
+
+      Enum.each(rest, fn report ->
+        Repo.delete(report)
+      end)
+    end
   end
 
   @doc """

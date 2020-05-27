@@ -233,24 +233,39 @@ defmodule Rona.Cases do
     |> Repo.one()
   end
 
-  def max_confirmed_delta(StateReport) do
-    StateReport
+  def max_confirmed_delta(StateReport, from_date) do
+    query =
+      if from_date,
+        do: StateReport |> where([r], r.date >= ^from_date),
+        else: StateReport
+
+    query
     |> select([r], max(r.confirmed_delta))
     |> join(:left, [r], s in assoc(r, :state))
     |> where([r, s], s.fips != "")
     |> Repo.one()
   end
 
-  def max_confirmed_delta(StateReport, state) do
-    StateReport
+  def max_confirmed_delta(StateReport, state, from_date) do
+    query =
+      if from_date,
+        do: StateReport |> where([r], r.date >= ^from_date),
+        else: StateReport
+
+    query
     |> select([r], max(r.confirmed_delta))
     |> join(:left, [r], s in assoc(r, :state))
     |> where([r, s], s.fips == ^state.fips)
     |> Repo.one()
   end
 
-  def max_confirmed_delta(CountyReport, state) do
-    CountyReport
+  def max_confirmed_delta(CountyReport, state, from_date) do
+    query =
+      if from_date,
+        do: CountyReport |> where([r], r.date >= ^from_date),
+        else: CountyReport
+
+    query
     |> select([r], max(r.confirmed_delta))
     |> join(:left, [r], c in assoc(r, :county))
     |> where([r, c], c.fips != "")

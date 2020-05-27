@@ -21,8 +21,8 @@ defmodule RonaWeb.StateChartLive do
             else: Rona.Cases.max_confirmed(Rona.Cases.StateReport, state)
         else
           if size == "small",
-            do: Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport),
-            else: Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport, state)
+            do: Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport, dates.first),
+            else: Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport, state, dates.first)
         end
       end
 

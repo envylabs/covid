@@ -15,6 +15,7 @@ defmodule RonaWeb.PageLive do
   end
 
   def handle_params(params, _url, socket) do
+    first_date = List.first(socket.assigns.dates)
     last_date = List.last(socket.assigns.dates)
 
     socket =
@@ -29,7 +30,8 @@ defmodule RonaWeb.PageLive do
           |> Enum.reverse()
           |> Enum.take(8)
 
-        max_value = Rona.Cases.max_confirmed_delta(Rona.Cases.CountyReport, state.name)
+        max_value =
+          Rona.Cases.max_confirmed_delta(Rona.Cases.CountyReport, state.name, first_date)
 
         socket
         |> assign(:state, state)
@@ -41,7 +43,7 @@ defmodule RonaWeb.PageLive do
           |> Enum.sort_by(&cumulative_cases(&1.reports, last_date))
           |> Enum.reverse()
 
-        max_value = Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport)
+        max_value = Rona.Cases.max_confirmed_delta(Rona.Cases.StateReport, first_date)
 
         socket
         |> assign(:state, nil)

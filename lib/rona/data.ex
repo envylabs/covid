@@ -42,8 +42,8 @@ defmodule Rona.Data do
     Logger.info("Updating US data...")
     # load_usa(:ny_times)
     load_usa(:johns_hopkins, next_day)
-    update_deltas(Rona.Cases.StateReport)
-    update_deltas(Rona.Cases.CountyReport)
+    update_calculated_fields(Rona.Cases.StateReport)
+    update_calculated_fields(Rona.Cases.CountyReport)
     clear_cache()
     Logger.info("US data updated.")
 
@@ -55,8 +55,8 @@ defmodule Rona.Data do
   def update_day(date_str) do
     date = Date.from_iso8601!(date_str)
     load_usa(:johns_hopkins, date)
-    update_deltas(Rona.Cases.StateReport)
-    update_deltas(Rona.Cases.CountyReport)
+    update_calculated_fields(Rona.Cases.StateReport)
+    update_calculated_fields(Rona.Cases.CountyReport)
     clear_cache()
   end
 
@@ -128,26 +128,55 @@ defmodule Rona.Data do
     load_johns_hopkins_state_report(date)
   end
 
-  def update_deltas(report_type) do
+  def update_calculated_fields(report_type) do
     Rona.Cases.list_dates(report_type)
-    |> Enum.reduce([], fn date, prev_reports ->
+    |> Enum.reduce([[]], fn date, prev_reports ->
       reports = Rona.Cases.for_date(report_type, date)
 
       Enum.each(reports, fn report ->
-        prev_report = find_matching_report(prev_reports, report)
+        prev_report = find_previous_report(prev_reports, report)
         update_deltas(report_type, report, prev_report)
       end)
 
-      reports
+      Enum.each(reports, fn report ->
+        prev_days = find_previous_reports(prev_reports, report)
+        update_averages(report_type, report, prev_days, 3)
+        update_averages(report_type, report, prev_days, 5)
+        update_averages(report_type, report, prev_days, 7)
+      end)
+
+      prev_reports ++ [reports]
     end)
   end
 
-  defp find_matching_report(list, %Rona.Cases.StateReport{state_id: id}) do
-    Enum.find(list, &(&1.state_id == id))
+  defp find_previous_report(list, %Rona.Cases.StateReport{state_id: id}) do
+    list
+    |> List.last()
+    |> Enum.find(&(&1.state_id == id))
   end
 
-  defp find_matching_report(list, %Rona.Cases.CountyReport{county_id: id}) do
-    Enum.find(list, &(&1.county_id == id))
+  defp find_previous_report(list, %Rona.Cases.CountyReport{county_id: id}) do
+    list
+    |> List.last()
+    |> Enum.find(&(&1.county_id == id))
+  end
+
+  defp find_previous_reports(list, %Rona.Cases.StateReport{state_id: id}) do
+    list
+    |> Enum.take(-6)
+    |> Enum.map(fn daily_list ->
+      Enum.find(daily_list, &(&1.state_id == id))
+    end)
+    |> Enum.reject(&is_nil(&1))
+  end
+
+  defp find_previous_reports(list, %Rona.Cases.CountyReport{county_id: id}) do
+    list
+    |> Enum.take(-6)
+    |> Enum.map(fn daily_list ->
+      Enum.find(daily_list, &(&1.county_id == id))
+    end)
+    |> Enum.reject(&is_nil(&1))
   end
 
   defp load_johns_hopkins_county_report(date) do
@@ -266,6 +295,93 @@ defmodule Rona.Data do
 
   defp schedule_work(event, delay) do
     Process.send_after(self(), event, delay)
+  end
+
+  defp update_averages(Rona.Cases.StateReport, report, prev_reports, days) do
+    prev_reports = Enum.take(prev_reports, -(days - 1))
+
+    tested =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.tested) |> Enum.sum(),
+        else: 0
+
+    tested_delta =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.tested_delta) |> Enum.sum(),
+        else: 0
+
+    confirmed =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.confirmed) |> Enum.sum(),
+        else: 0
+
+    confirmed_delta =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.confirmed_delta) |> Enum.sum(),
+        else: 0
+
+    hospitalized =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.hospitalized) |> Enum.sum(),
+        else: 0
+
+    hospitalized_delta =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.hospitalized_delta) |> Enum.sum(),
+        else: 0
+
+    deceased =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.deceased) |> Enum.sum(),
+        else: 0
+
+    deceased_delta =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.deceased_delta) |> Enum.sum(),
+        else: 0
+
+    Rona.Cases.update_report(report, %{
+      "tested_avg_#{days}": round((report.tested + tested) / days),
+      "tested_delta_avg_#{days}": round((report.tested_delta + tested_delta) / days),
+      "confirmed_avg_#{days}": round((report.confirmed + confirmed) / days),
+      "confirmed_delta_avg_#{days}": round((report.confirmed_delta + confirmed_delta) / days),
+      "hospitalized_avg_#{days}": round((report.hospitalized + hospitalized) / days),
+      "hospitalized_delta_avg_#{days}":
+        round((report.hospitalized_delta + hospitalized_delta) / days),
+      "deceased_avg_#{days}": round((report.deceased + deceased) / days),
+      "deceased_delta_avg_#{days}": round((report.deceased_delta + deceased_delta) / days)
+    })
+  end
+
+  defp update_averages(_, report, prev_reports, days) do
+    prev_reports = Enum.take(prev_reports, -(days - 1))
+
+    confirmed =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.confirmed) |> Enum.sum(),
+        else: 0
+
+    confirmed_delta =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.confirmed_delta) |> Enum.sum(),
+        else: 0
+
+    deceased =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.deceased) |> Enum.sum(),
+        else: 0
+
+    deceased_delta =
+      if length(prev_reports) > 0,
+        do: prev_reports |> Enum.map(& &1.deceased_delta) |> Enum.sum(),
+        else: 0
+
+    Rona.Cases.update_report(report, %{
+      "confirmed_avg_#{days}": round((report.confirmed + confirmed) / days),
+      "confirmed_delta_avg_#{days}": round((report.confirmed_delta + confirmed_delta) / days),
+      "deceased_avg_#{days}": round((report.deceased + deceased) / days),
+      "deceased_delta_avg_#{days}": round((report.deceased_delta + deceased_delta) / days)
+    })
   end
 
   defp update_deltas(Rona.Cases.StateReport, report, prev_report) do

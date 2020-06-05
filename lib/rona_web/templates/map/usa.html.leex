@@ -14,6 +14,16 @@
       <input name="population_scale" type="checkbox" <%= if @population_scale, do: "checked", else: "" %> />
       <span>Scale by Population</span>
     </label>
+
+    <div class="form-select">
+      <label class="srt" for="form-average">Moving Average</label>
+      <select name="average" id="form-average">
+        <option value="" <%= if !@average, do: "selected", else: "" %>>None</option>
+        <option value="3" <%= if @average == 3, do: "selected", else: "" %>>3 Day</option>
+        <option value="5" <%= if @average == 5, do: "selected", else: "" %>>5 Day</option>
+        <option value="7" <%= if @average == 7, do: "selected", else: "" %>>7 Day</option>
+      </select>
+    </div>
   </form>
 
   <div class="layout-controls">

@@ -10,6 +10,7 @@ defmodule RonaWeb.StateChartLive do
     dates = Date.range(Date.from_iso8601!(start_date), Date.from_iso8601!(end_date))
     size = Map.get(session, "size", "small")
     totals = Map.get(session, "totals", false)
+    average = Map.get(session, "average", nil)
 
     max_value =
       if Map.get(session, "max_value") do
@@ -33,6 +34,7 @@ defmodule RonaWeb.StateChartLive do
       |> assign(:max_value, max_value)
       |> assign(:size, size)
       |> assign(:totals, totals)
+      |> assign(:average, average)
       |> assign(:title, Map.get(session, "title", ""))
 
     {:ok, fetch_chart_data(socket)}
@@ -45,7 +47,8 @@ defmodule RonaWeb.StateChartLive do
   end
 
   defp fetch_chart_data(socket) do
-    cache_key = "chart-#{socket.assigns.state.fips}-#{socket.assigns.totals}"
+    cache_key =
+      "chart-#{socket.assigns.state.fips}-#{socket.assigns.totals}-#{socket.assigns.average}"
 
     data =
       Rona.Data.cache(cache_key, socket.assigns.dates.last, fn ->
@@ -59,24 +62,26 @@ defmodule RonaWeb.StateChartLive do
     assign(socket, data)
   end
 
-  defp build_data(%{dates: dates, state: state, totals: totals}) do
+  defp build_data(%{dates: dates, state: state, totals: totals, average: average}) do
     Enum.map(dates, fn date ->
       report = Enum.find(state.reports, &(&1.date == date))
 
       if report do
-        if totals do
-          %{
-            t: date,
-            c: report.confirmed - report.deceased,
-            d: report.deceased
-          }
-        else
-          %{
-            t: date,
-            c: report.confirmed_delta - report.deceased_delta,
-            d: report.deceased_delta
-          }
-        end
+        {c, d} =
+          if totals,
+            do: {"confirmed", "deceased"},
+            else: {"confirmed_delta", "deceased_delta"}
+
+        {c, d} =
+          if average,
+            do: {"#{c}_avg_#{average}", "#{d}_avg_#{average}"},
+            else: {c, d}
+
+        %{
+          t: date,
+          c: Map.get(report, String.to_atom(c)) - Map.get(report, String.to_atom(d)),
+          d: Map.get(report, String.to_atom(d))
+        }
       else
         %{t: date, c: 0, d: 0}
       end

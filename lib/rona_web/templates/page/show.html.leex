@@ -19,10 +19,10 @@
 
 <div class="layout-breakout">
   <ul class="has-chart has-chart--2">
-    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "testing", session: %{"state" => "#{@state.fips}", "title" => "Testing", "field" => "tested", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "testing_rate", "percent_label" => "of state population"}) %></li>
-    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "confirmed", session: %{"state" => "#{@state.fips}", "title" => "Confirmed Cases", "field" => "confirmed", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "positive_rate", "percent_label" => "of people tested"}) %></li>
-    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "hospitalizations", session: %{"state" => "#{@state.fips}", "title" => "Hospitalizations", "field" => "hospitalized", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "hospitalization_rate", "percent_label" => "of confirmed cases"}) %></li>
-    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "deaths", session: %{"state" => "#{@state.fips}", "title" => "Deaths", "field" => "deceased", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "death_rate", "percent_label" => "of confirmed cases"}) %></li>
+    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "testing-#{@average}", session: %{"state" => "#{@state.fips}", "title" => "Testing", "field" => "tested", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "testing_rate", "percent_label" => "of state population", "average" => @average}) %></li>
+    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "confirmed-#{@average}", session: %{"state" => "#{@state.fips}", "title" => "Confirmed Cases", "field" => "confirmed", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "positive_rate", "percent_label" => "of people tested", "average" => @average}) %></li>
+    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "hospitalizations-#{@average}", session: %{"state" => "#{@state.fips}", "title" => "Hospitalizations", "field" => "hospitalized", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "hospitalization_rate", "percent_label" => "of confirmed cases", "average" => @average}) %></li>
+    <li><%= live_render(@socket, RonaWeb.TrendChartLive, id: "deaths-#{@average}", session: %{"state" => "#{@state.fips}", "title" => "Deaths", "field" => "deceased", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "percent" => "death_rate", "percent_label" => "of confirmed cases", "average" => @average}) %></li>
   </ul>
 </div>
 
@@ -38,7 +38,7 @@
 <div class="layout-breakout">
   <ul class="has-chart">
     <%= for county <- @counties do %>
-      <li><%= live_render(@socket, RonaWeb.CountyChartLive, id: county.fips, session: %{"county" => "#{county.fips}", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "max_value" => @max_value}) %></li>
+      <li><%= live_render(@socket, RonaWeb.CountyChartLive, id: "#{county.fips}-#{@average}", session: %{"county" => "#{county.fips}", "start_date" => "#{@start_date}", "end_date" => "#{@end_date}", "max_value" => @max_value, "average" => @average}) %></li>
     <% end %>
   </ul>
 </div>

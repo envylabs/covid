@@ -12,6 +12,7 @@ defmodule RonaWeb.USAMapLive do
       socket
       |> assign(:series, :confirmed)
       |> assign(:population_scale, false)
+      |> assign(:average, nil)
       |> assign(:dates, dates)
       |> assign(:json_dates, Jason.encode!(dates))
       |> assign(:max_date_index, length(dates) - 1)
@@ -21,10 +22,18 @@ defmodule RonaWeb.USAMapLive do
   end
 
   def handle_event("update_settings", params, socket) do
+    average =
+      if String.length(params["average"]) == 0,
+        do: nil,
+        else: String.to_integer(params["average"])
+
     socket =
       socket
       |> assign(:series, String.to_atom(params["series"]))
       |> assign(:population_scale, params["population_scale"] || false)
+      |> assign(:average, average)
+
+    send(socket.parent_pid, {:update_average, average})
 
     {:noreply, fetch_map_data(socket)}
   end
@@ -34,8 +43,14 @@ defmodule RonaWeb.USAMapLive do
   end
 
   defp fetch_map_data(socket) do
-    cache_key =
-      "map-#{socket.assigns.zoom}-#{socket.assigns.series}-#{socket.assigns.population_scale}"
+    series = socket.assigns.series
+
+    series =
+      if socket.assigns.average,
+        do: String.to_atom("#{series}_avg_#{socket.assigns.average}"),
+        else: series
+
+    cache_key = "map-#{socket.assigns.zoom}-#{series}-#{socket.assigns.population_scale}"
 
     data =
       Rona.Data.cache(cache_key, List.last(socket.assigns.dates), fn ->
@@ -47,7 +62,7 @@ defmodule RonaWeb.USAMapLive do
 
             value =
               scale_value(
-                Map.get(report, socket.assigns.series),
+                Map.get(report, series),
                 socket,
                 report.county.population
               )

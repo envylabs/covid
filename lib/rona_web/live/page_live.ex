@@ -10,8 +10,13 @@ defmodule RonaWeb.PageLive do
       |> assign(:dates, date_range)
       |> assign(:start_date, List.first(date_range))
       |> assign(:end_date, List.last(date_range))
+      |> assign(:average, nil)
 
     {:ok, socket}
+  end
+
+  def handle_info({:update_average, average}, socket) do
+    {:noreply, assign(socket, :average, average)}
   end
 
   def handle_params(params, _url, socket) do

@@ -321,8 +321,8 @@ a.chart:focus {
   height: 0.4rem;
   pointer-events: none;
   position: absolute;
-  right: 0.8rem;
-  top: 0.6rem;
+  right: 0.7rem;
+  top: 0.65rem;
   transform: rotate(45deg);
   width: 0.4rem;
 }
@@ -345,7 +345,7 @@ a.chart:focus {
   font-size: 0.8706em;
   font-weight: bold;
   line-height: 1.6rem;
-  padding: calc(0.2rem - 1px) 1.8rem calc(0.2rem - 1px) 0.6rem;
+  padding: calc(0.2rem - 1px) 1.4rem calc(0.2rem - 1px) 0.6rem;
   width: 7.6rem;
 }
 .form-select select:hover,
@@ -415,6 +415,24 @@ a.chart:focus {
 }
 .layout-controls > * + * {
   margin-left: 0.8rem;
+}
+.layout-controls--top {
+  flex-wrap: wrap;
+}
+.layout-controls--top > *:last-child {
+  flex-basis: 100%;
+  flex-shrink: 0;
+  margin-left: 0;
+  margin-top: 0.8rem;
+}
+@media (min-width: 30em) {
+  .layout-controls--top {
+    flex-wrap: nowrap;
+  }
+  .layout-controls--top > *:last-child {
+    margin-left: 0.8rem;
+    margin-top: 0;
+  }
 }
 
 .layout-footer p {

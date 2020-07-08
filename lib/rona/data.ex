@@ -42,21 +42,22 @@ defmodule Rona.Data do
     Logger.info("Updating US data...")
     # load_usa(:ny_times)
     load_usa(:johns_hopkins, next_day)
-    update_calculated_fields(Rona.Cases.StateReport)
-    update_calculated_fields(Rona.Cases.CountyReport)
+    update_calculated_fields(Rona.Cases.StateReport, next_day)
+    update_calculated_fields(Rona.Cases.CountyReport, next_day)
     clear_cache()
     Logger.info("US data updated.")
 
-    # 1 hour
-    schedule_work(:refresh_us_data, 3_600_000)
+    # 1 hour if we're caught up; otherwise, 1 minute
+    delay = if Date.diff(Date.utc_today(), next_day) > 1, do: 60_000, else: 3_600_000
+    schedule_work(:refresh_us_data, delay)
     {:noreply, state}
   end
 
   def update_day(date_str) do
     date = Date.from_iso8601!(date_str)
     load_usa(:johns_hopkins, date)
-    update_calculated_fields(Rona.Cases.StateReport)
-    update_calculated_fields(Rona.Cases.CountyReport)
+    update_calculated_fields(Rona.Cases.StateReport, date)
+    update_calculated_fields(Rona.Cases.CountyReport, date)
     clear_cache()
   end
 
@@ -128,24 +129,23 @@ defmodule Rona.Data do
     load_johns_hopkins_state_report(date)
   end
 
-  def update_calculated_fields(report_type) do
-    Rona.Cases.list_dates(report_type)
-    |> Enum.reduce([[]], fn date, prev_reports ->
-      reports = Rona.Cases.for_date(report_type, date)
+  def update_calculated_fields(report_type, date) do
+    prev_reports =
+      Date.range(Date.add(date, -7), Date.add(date, -1))
+      |> Enum.map(&Rona.Cases.for_date(report_type, &1))
 
-      Enum.each(reports, fn report ->
-        prev_report = find_previous_report(prev_reports, report)
-        update_deltas(report_type, report, prev_report)
-      end)
+    reports = Rona.Cases.for_date(report_type, date)
 
-      Enum.each(reports, fn report ->
-        prev_days = find_previous_reports(prev_reports, report)
-        update_averages(report_type, report, prev_days, 3)
-        update_averages(report_type, report, prev_days, 5)
-        update_averages(report_type, report, prev_days, 7)
-      end)
+    Enum.each(reports, fn report ->
+      prev_report = find_previous_report(prev_reports, report)
+      update_deltas(report_type, report, prev_report)
+    end)
 
-      prev_reports ++ [reports]
+    Enum.each(reports, fn report ->
+      prev_days = find_previous_reports(prev_reports, report)
+      update_averages(report_type, report, prev_days, 3)
+      update_averages(report_type, report, prev_days, 5)
+      update_averages(report_type, report, prev_days, 7)
     end)
   end
 
